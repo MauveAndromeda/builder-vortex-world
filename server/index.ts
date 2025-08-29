@@ -4,7 +4,7 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleSubscribe } from "./routes/subscribe";
 import { handleContact } from "./routes/contact";
-import { handleCreateIntent } from "./routes/stripe";
+import { handleCreateIntent, handleStripeWebhook, handlePublicKey } from "./routes/stripe";
 
 export function createServer() {
   const app = express();
@@ -12,7 +12,7 @@ export function createServer() {
   // Middleware
   app.use(cors());
   // Stripe webhook must receive raw body
-  app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), (await import("./routes/stripe")).handleStripeWebhook);
+  app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
@@ -25,7 +25,7 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.post("/api/subscribe", handleSubscribe);
   app.post("/api/contact", handleContact);
-  app.get("/api/stripe/publishable-key", (await import("./routes/stripe")).handlePublicKey);
+  app.get("/api/stripe/publishable-key", handlePublicKey);
   app.post("/api/stripe/create-intent", handleCreateIntent);
 
   return app;
