@@ -4,6 +4,7 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleSubscribe } from "./routes/subscribe";
 import { handleContact } from "./routes/contact";
+import { handleCreateIntent } from "./routes/stripe";
 
 export function createServer() {
   const app = express();
