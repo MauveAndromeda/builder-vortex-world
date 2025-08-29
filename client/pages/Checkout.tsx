@@ -4,9 +4,14 @@ import SEO from "@/components/site/SEO";
 import { works, getChaptersByWork } from "@/data/content";
 import { useEffect, useMemo, useState } from "react";
 
-function usePublishableKey() {
-  const meta = document.querySelector('meta[name="stripe-publishable-key"]') as HTMLMetaElement | null;
-  return meta?.content || "";
+async function getPublishableKey() {
+  try {
+    const r = await fetch("/api/stripe/publishable-key");
+    const j = await r.json();
+    return j.publishableKey as string;
+  } catch {
+    return "";
+  }
 }
 
 export default function Checkout() {
@@ -17,7 +22,9 @@ export default function Checkout() {
   const order = params.order ? Number(params.order) : undefined;
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("");
-  const pk = usePublishableKey();
+  const [pk, setPk] = useState<string>("");
+  const [stripe, setStripe] = useState<any>(null);
+  const [elements, setElements] = useState<any>(null);
 
   const item = useMemo(() => {
     if (mode === "buy-all") return { label: "Buy All", amount: 100000 }; // $1000
