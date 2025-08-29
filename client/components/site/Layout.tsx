@@ -105,8 +105,9 @@ export function Footer() {
       <div className="container mx-auto py-10 grid gap-8 md:grid-cols-2 items-center">
         <Newsletter />
         <div className="flex flex-col items-start gap-2 text-sm">
-          <div className="opacity-80">© {new Date().getFullYear()} yclit.org</div>
+          <div className="opacity-80">© 2025 yclit.org</div>
           <div className="flex gap-4">
+            <a className="opacity-80 hover:opacity-100 transition" href="#newsletter">Newsletter</a>
             <Link className="opacity-80 hover:opacity-100 transition" to={localized("/privacy", locale)}>{t("privacy", locale)}</Link>
             <Link className="opacity-80 hover:opacity-100 transition" to={localized("/terms", locale)}>{t("terms", locale)}</Link>
           </div>
