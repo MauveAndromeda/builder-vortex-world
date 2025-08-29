@@ -43,20 +43,42 @@ export default function Checkout() {
   }, [mode, slug, order]);
 
   useEffect(() => {
-    async function createIntent() {
+    async function setup() {
       if (!item) return;
       setStatus("Preparing...");
-      const res = await fetch("/api/stripe/create-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: item.amount, currency: "usd", mode, slug, order }),
-      });
-      const data = await res.json();
-      setClientSecret(data.clientSecret || null);
-      setStatus(data.demo ? "Demo mode (no key)." : "Ready");
+      const [key, intentRes] = await Promise.all([
+        getPublishableKey(),
+        fetch("/api/stripe/create-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: item.amount, currency: "usd", mode, slug, order }),
+        }).then((r)=>r.json()),
+      ]);
+      setPk(key || "");
+      setClientSecret(intentRes.clientSecret || null);
+      setStatus(intentRes.demo ? "Demo mode (no key)." : "Ready");
+      if (key && intentRes.clientSecret && (window as any).Stripe) {
+        const s = (window as any).Stripe(key);
+        const els = s.elements({ clientSecret: intentRes.clientSecret });
+        const payment = els.create("payment");
+        payment.mount("#payment-element");
+        setStripe(s); setElements(els);
+      }
     }
-    createIntent();
+    setup();
   }, [item, mode, slug, order]);
+
+  async function pay(e: React.FormEvent) {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+    setStatus("Confirming payment…");
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: { return_url: window.location.origin + "/" + locale + "/account/purchases" },
+      redirect: "if_required",
+    });
+    if (error) setStatus(error.message || "Payment failed"); else setStatus("Paid or redirected");
+  }
 
   return (
     <section className="py-16 max-w-xl">
