@@ -76,12 +76,22 @@ export function Header() {
 
 export function Newsletter() {
   const { locale } = useLocale();
+  async function subscribe(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+    const email = String(formData.get("email") || "");
+    try {
+      await fetch("/api/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
+      form.reset();
+    } catch {}
+  }
   return (
-    <div className="rounded-2xl border p-6 md:p-8 bg-card">
+    <div id="newsletter" className="rounded-2xl border p-6 md:p-8 bg-card">
       <h3 className="text-lg font-semibold">{t("newsletterTitle", locale)}</h3>
       <p className="text-sm text-muted-foreground mt-1">{t("newsletterDesc", locale)}</p>
-      <form onSubmit={(e)=>e.preventDefault()} className="mt-4 flex gap-2">
-        <input aria-label="Email" placeholder={t("emailPlaceholder", locale)} className="flex-1 rounded-full bg-muted px-4 py-2 text-sm outline-none focus:bg-background focus:ring-2 focus:ring-ring" />
+      <form onSubmit={subscribe} className="mt-4 flex gap-2">
+        <input name="email" type="email" required aria-label="Email" placeholder={t("emailPlaceholder", locale)} className="flex-1 rounded-full bg-muted px-4 py-2 text-sm outline-none focus:bg-background focus:ring-2 focus:ring-ring" />
         <button className="rounded-full bg-foreground text-background px-4 py-2 text-sm transition hover:opacity-90">{t("subscribe", locale)}</button>
       </form>
     </div>
