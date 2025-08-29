@@ -17,7 +17,7 @@ export function LocaleSwitcher() {
             locale === l ? "bg-background shadow-sm" : "opacity-70 hover:opacity-100"
           )}
         >
-          {l === "en" ? "EN" : "简体"}
+          {l === "en-US" ? "EN" : "简体"}
         </button>
       ))}
     </div>
