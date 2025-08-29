@@ -37,8 +37,10 @@ const App = () => (
             <Route path="privacy" element={<Placeholder title="Privacy" />} />
             <Route path="terms" element={<Placeholder title="Terms" />} />
             <Route path="checkout">
-              <Route path="buy-all" element={<Placeholder title="Checkout — Buy all" />} />
-              <Route path="work/:slug" element={<Placeholder title="Checkout — Work" />} />
+              <Route path="buy-all" element={<CheckoutWrapper mode="buy-all" />} />
+              <Route path="work/:slug" element={<CheckoutWrapper mode="work" />} />
+              <Route path="chapter/:slug/:order" element={<CheckoutWrapper mode="chapter" />} />
+              <Route path="donation" element={<CheckoutWrapper mode="donation" />} />
             </Route>
             <Route path="account" element={<AccountLayout />}>
               <Route path="sign-in" element={<SignIn />} />
