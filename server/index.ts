@@ -25,6 +25,7 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.post("/api/subscribe", handleSubscribe);
   app.post("/api/contact", handleContact);
+  app.post("/api/stripe/create-intent", handleCreateIntent);
 
   return app;
 }
