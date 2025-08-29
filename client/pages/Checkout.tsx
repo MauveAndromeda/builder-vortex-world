@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { useLocale, t, localized } from "@/lib/i18n";
 import SEO from "@/components/site/SEO";
 import { works, getChaptersByWork } from "@/data/content";
