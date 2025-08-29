@@ -7,7 +7,7 @@ export function LocaleSwitcher() {
   const { locale, setLocale } = useLocale();
   return (
     <div className="flex items-center gap-2 rounded-full bg-muted px-1 py-1 text-sm">
-      {(["en", "zh-CN"] as const).map((l) => (
+      {(["en-US", "zh-CN"] as const).map((l) => (
         <button
           key={l}
           aria-pressed={locale === l}
