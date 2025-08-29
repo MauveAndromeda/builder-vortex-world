@@ -13,11 +13,13 @@ export default function Works() {
   const params = new URLSearchParams(loc.search);
   const q = params.get("q")?.toLowerCase() ?? "";
   const author = params.get("author") ?? "";
+  const tag = params.get("tag") ?? "";
   const pageParam = Number(params.get("page") || 1);
 
   const authors = Array.from(new Set(allWorks.map((w) => w.author)));
+  const tags = Array.from(new Set(allWorks.flatMap((w) => w.tags || [])));
 
-  const filtered = useMemo(() => allWorks.filter(w => w.published && (!q || w.title.toLowerCase().includes(q) || w.excerpt.toLowerCase().includes(q) || w.author.toLowerCase().includes(q)) && (!author || w.author === author)), [q, author]);
+  const filtered = useMemo(() => allWorks.filter(w => w.published && (!q || w.title.toLowerCase().includes(q) || w.excerpt.toLowerCase().includes(q) || w.author.toLowerCase().includes(q)) && (!author || w.author === author) && (!tag || (w.tags || []).includes(tag))), [q, author, tag]);
 
   const pageSize = 8;
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
@@ -47,6 +49,12 @@ export default function Works() {
           <select value={author} onChange={(e)=>setFilter("author", e.target.value)} className="ml-2 rounded-full border bg-background px-3 py-1 text-sm">
             <option value="">All</option>
             {authors.map((a)=> <option key={a} value={a}>{a}</option>)}
+          </select>
+        </label>
+        <label className="text-sm">Tag
+          <select value={tag} onChange={(e)=>setFilter("tag", e.target.value)} className="ml-2 rounded-full border bg-background px-3 py-1 text-sm">
+            <option value="">All</option>
+            {tags.map((t)=> <option key={t} value={t}>{t}</option>)}
           </select>
         </label>
         <div className="text-sm text-muted-foreground">Search: “{q}”</div>
