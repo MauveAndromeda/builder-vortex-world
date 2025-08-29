@@ -93,7 +93,10 @@ export default function Checkout() {
           <div className="mt-4 text-sm">{status}</div>
           {!pk && <div className="mt-2 text-xs text-amber-600">Stripe publishable key not set. Running in demo mode.</div>}
           {clientSecret ? (
-            <button className="mt-6 rounded-full bg-foreground text-background px-5 py-2 text-sm" onClick={()=>alert("Use test card 4242… on Stripe Elements once keys are set.")}>Pay</button>
+            <form onSubmit={pay} className="mt-4 grid gap-4">
+              <div id="payment-element"></div>
+              <button className="rounded-full bg-foreground text-background px-5 py-2 text-sm">Pay</button>
+            </form>
           ) : (
             <div className="mt-6 text-sm text-muted-foreground">Creating payment intent…</div>
           )}
