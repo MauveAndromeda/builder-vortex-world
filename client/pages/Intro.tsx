@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useLocale, localized } from "@/lib/i18n";
 import { useNavigate } from "react-router-dom";
 
-const KEY = "introSeenAt";
+const KEY = "introSeen";
 
 function seenRecently(): boolean {
   try {
