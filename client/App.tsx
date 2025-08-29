@@ -13,6 +13,7 @@ import WorkDetail from "@/pages/WorkDetail";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import AccountLayout, { SignIn, Register, Purchases } from "@/pages/Account";
+import Intro from "@/pages/Intro";
 import Placeholder from "@/pages/Placeholder";
 import NotFound from "@/pages/NotFound";
 
@@ -25,8 +26,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/en-US" replace />} />
+          <Route path="/" element={<Navigate to="/en-US/intro" replace />} />
           <Route path=":locale" element={<Layout />}>
+            <Route path="intro" element={<Intro />} />
             <Route index element={<Home />} />
             <Route path="works" element={<Works />} />
             <Route path="work/:slug" element={<WorkDetail />} />

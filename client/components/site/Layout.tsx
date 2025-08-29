@@ -59,10 +59,10 @@ export function Header() {
             {t("brand", locale)}
           </Link>
           <nav className="hidden md:flex items-center gap-4 text-sm">
-            <Link className="hover:opacity-100 opacity-80 transition" to={localized("/", locale)}>{t("home", locale)}</Link>
-            <Link className="hover:opacity-100 opacity-80 transition" to={localized("/works", locale)}>{t("works", locale)}</Link>
-            <Link className="hover:opacity-100 opacity-80 transition" to={localized("/about", locale)}>{t("about", locale)}</Link>
-            <Link className="hover:opacity-100 opacity-80 transition" to={localized("/contact", locale)}>{t("contact", locale)}</Link>
+            <Link className="hover:opacity-100 opacity-80 transition rounded focus:outline-none focus:ring-2 focus:ring-ring" to={localized("/", locale)}>{t("home", locale)}</Link>
+            <Link className="hover:opacity-100 opacity-80 transition rounded focus:outline-none focus:ring-2 focus:ring-ring" to={localized("/works", locale)}>{t("works", locale)}</Link>
+            <Link className="hover:opacity-100 opacity-80 transition rounded focus:outline-none focus:ring-2 focus:ring-ring" to={localized("/about", locale)}>{t("about", locale)}</Link>
+            <Link className="hover:opacity-100 opacity-80 transition rounded focus:outline-none focus:ring-2 focus:ring-ring" to={localized("/contact", locale)}>{t("contact", locale)}</Link>
           </nav>
         </div>
         <div className="flex items-center gap-3">
@@ -181,11 +181,20 @@ export function ChatWidget() {
 export default function Layout() {
   const loc = useLocation();
   useEffect(() => {
-    // simple analytics: page view counter
     try {
       const k = "analytics:views";
       const current = Number(localStorage.getItem(k) || "0");
       localStorage.setItem(k, String(current + 1));
+    } catch {}
+    // intro redirect on first visit
+    try {
+      const parts = loc.pathname.split("/").filter(Boolean);
+      const atHome = parts.length === 1; // /:locale
+      const seenAt = Number(localStorage.getItem("introSeenAt") || "0");
+      const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (atHome && !reduce && (!seenAt || Date.now() - seenAt > 24*60*60*1000)) {
+        window.location.replace(`/${parts[0]}/intro`);
+      }
     } catch {}
   }, [loc.pathname]);
 
