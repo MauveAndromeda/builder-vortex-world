@@ -21,7 +21,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/en" replace />} />
+          <Route path="/" element={<Navigate to="/en-US" replace />} />
           <Route path=":locale" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="works" element={<Works />} />
@@ -32,7 +32,7 @@ const App = () => (
             <Route path="works/:slug" element={<Placeholder title="Work detail" />} />
             <Route path="*" element={<NotFound />} />
           </Route>
-          <Route path="*" element={<Navigate to="/en" replace />} />
+          <Route path="*" element={<Navigate to="/en-US" replace />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

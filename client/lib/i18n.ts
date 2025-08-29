@@ -1,15 +1,15 @@
 import { useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
-export type Locale = "en" | "zh-CN";
-export const SUPPORTED_LOCALES: Locale[] = ["en", "zh-CN"];
+export type Locale = "en-US" | "zh-CN";
+export const SUPPORTED_LOCALES: Locale[] = ["en-US", "zh-CN"];
 
 export function useLocale(): { locale: Locale; setLocale: (l: Locale) => void } {
   const params = useParams();
   const nav = useNavigate();
   const loc = useLocation();
-  const raw = (params.locale as string) || "en";
-  const locale: Locale = SUPPORTED_LOCALES.includes(raw as Locale) ? (raw as Locale) : "en";
+  const raw = (params.locale as string) || "en-US";
+  const locale: Locale = SUPPORTED_LOCALES.includes(raw as Locale) ? (raw as Locale) : "en-US";
 
   function setLocale(next: Locale) {
     const parts = loc.pathname.split("/").filter(Boolean);
@@ -27,7 +27,7 @@ export function useLocale(): { locale: Locale; setLocale: (l: Locale) => void } 
 
 export const t = (key: string, locale: Locale): string => {
   const dict: Record<Locale, Record<string, string>> = {
-    en: {
+    "en-US": {
       brand: "YCity Bookroom",
       hero: "You found YCity’s little bookroom",
       readOnline: "Read online",
@@ -60,7 +60,7 @@ export const t = (key: string, locale: Locale): string => {
       terms: "条款",
       comingSoon: "即将上线",
       newsletterTitle: "订阅更新",
-      newsletterDesc: "偶尔来���，不打扰。",
+      newsletterDesc: "偶尔来信，不打扰。",
       emailPlaceholder: "你的邮箱",
       subscribe: "订阅",
       chapters: "章节",
