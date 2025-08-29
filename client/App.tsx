@@ -9,6 +9,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "@/components/site/Layout";
 import Home from "@/pages/Home";
 import Works from "@/pages/Works";
+import WorkDetail from "@/pages/WorkDetail";
+import About from "@/pages/About";
+import Contact from "@/pages/Contact";
+import AccountLayout, { SignIn, Register, Purchases } from "@/pages/Account";
 import Placeholder from "@/pages/Placeholder";
 import NotFound from "@/pages/NotFound";
 
