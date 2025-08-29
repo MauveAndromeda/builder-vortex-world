@@ -39,7 +39,7 @@ export default function Intro() {
   }
 
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 pointer-events-none [background:radial-gradient(ellipse_at_center,rgba(0,0,0,0.06),transparent_60%)] dark:[background:radial-gradient(ellipse_at_center,rgba(255,255,255,0.05),transparent_60%)]" />
       <div className="absolute inset-0 opacity-30 mix-blend-multiply" aria-hidden>
         <div className="grain" />
