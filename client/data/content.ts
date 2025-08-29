@@ -3,6 +3,8 @@ export interface Work {
   slug: string;
   cover: string;
   excerpt: string;
+  author: string;
+  date: string; // ISO
   price?: number;
   published: boolean;
 }
