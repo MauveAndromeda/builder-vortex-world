@@ -29,11 +29,20 @@ const App = () => (
           <Route path=":locale" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="works" element={<Works />} />
-            <Route path="about" element={<Placeholder title="About" />} />
-            <Route path="contact" element={<Placeholder title="Contact" />} />
+            <Route path="work/:slug" element={<WorkDetail />} />
+            <Route path="about" element={<About />} />
+            <Route path="contact" element={<Contact />} />
             <Route path="privacy" element={<Placeholder title="Privacy" />} />
             <Route path="terms" element={<Placeholder title="Terms" />} />
-            <Route path="works/:slug" element={<Placeholder title="Work detail" />} />
+            <Route path="checkout">
+              <Route path="buy-all" element={<Placeholder title="Checkout — Buy all" />} />
+              <Route path="work/:slug" element={<Placeholder title="Checkout — Work" />} />
+            </Route>
+            <Route path="account" element={<AccountLayout />}>
+              <Route path="sign-in" element={<SignIn />} />
+              <Route path="register" element={<Register />} />
+              <Route path="purchases" element={<Purchases />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
           <Route path="*" element={<Navigate to="/en-US" replace />} />
