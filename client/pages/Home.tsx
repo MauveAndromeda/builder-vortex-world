@@ -21,9 +21,9 @@ export default function Home() {
             <Link to={localized("/works", locale)} className="inline-flex items-center rounded-full bg-foreground text-background px-5 py-2.5 text-sm transition-transform duration-300 hover:scale-[1.015]">
               {t("readOnline", locale)}
             </Link>
-            <button onClick={()=>alert(t("comingSoon", locale))} className="inline-flex items-center rounded-full border px-5 py-2.5 text-sm transition hover:bg-muted">
+            <Link to={localized("/checkout/buy-all", locale)} className="inline-flex items-center rounded-full border px-5 py-2.5 text-sm transition hover:bg-muted">
               {t("buyAll", locale)}
-            </button>
+            </Link>
           </div>
         </div>
         <div className="md:col-span-5">
