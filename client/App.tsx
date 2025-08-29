@@ -14,6 +14,7 @@ import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import AccountLayout, { SignIn, Register, Purchases } from "@/pages/Account";
 import Intro from "@/pages/Intro";
+import CheckoutWrapper from "@/pages/CheckoutWrapper";
 import Placeholder from "@/pages/Placeholder";
 import NotFound from "@/pages/NotFound";
 
