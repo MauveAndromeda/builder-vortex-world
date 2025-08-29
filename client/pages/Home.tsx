@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   const { locale } = useLocale();
-  const hero = locale === "en" ? settings.heroTextEn : settings.heroTextZh;
+  const hero = locale === "en-US" ? settings.heroTextEn : settings.heroTextZh;
   return (
     <section className="py-16 md:py-24">
       <SEO title={`${t("brand", locale)} — ${hero}`} description="A minimalist literary website for wandering readers." />
