@@ -186,16 +186,6 @@ export default function Layout() {
       const current = Number(localStorage.getItem(k) || "0");
       localStorage.setItem(k, String(current + 1));
     } catch {}
-    // intro redirect on first visit
-    try {
-      const parts = loc.pathname.split("/").filter(Boolean);
-      const atHome = parts.length === 1; // /:locale
-      const seenAt = Number(localStorage.getItem("introSeen") || "0");
-      const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (atHome && !reduce && (!seenAt || Date.now() - seenAt > 24*60*60*1000)) {
-        window.location.replace(`/${parts[0]}/intro`);
-      }
-    } catch {}
   }, [loc.pathname]);
 
   return (
