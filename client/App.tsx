@@ -15,6 +15,8 @@ import Contact from "@/pages/Contact";
 import AccountLayout, { SignIn, Register, Purchases } from "@/pages/Account";
 import CheckoutWrapper from "@/pages/CheckoutWrapper";
 import Profile from "@/pages/Profile";
+import Splash from "@/pages/Splash";
+import Start from "@/pages/Start";
 import Placeholder from "@/pages/Placeholder";
 import NotFound from "@/pages/NotFound";
 
