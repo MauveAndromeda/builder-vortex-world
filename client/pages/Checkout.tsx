@@ -17,7 +17,12 @@ async function getPublishableKey() {
 export default function Checkout() {
   const { locale } = useLocale();
   const params = useParams();
-  const mode = (params.mode || "").toString();
+  const loc = useLocation();
+  let mode = "" as string;
+  if (loc.pathname.includes("/buy-all")) mode = "buy-all";
+  else if (loc.pathname.includes("/work/")) mode = "work";
+  else if (loc.pathname.includes("/chapter/")) mode = "chapter";
+  else if (loc.pathname.includes("/donation")) mode = "donation";
   const slug = params.slug;
   const order = params.order ? Number(params.order) : undefined;
   const [clientSecret, setClientSecret] = useState<string | null>(null);
