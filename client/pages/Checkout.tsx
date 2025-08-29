@@ -3,6 +3,7 @@ import { useLocale, t, localized } from "@/lib/i18n";
 import SEO from "@/components/site/SEO";
 import { works, getChaptersByWork } from "@/data/content";
 import { useEffect, useMemo, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
 
 async function getPublishableKey() {
   try {
