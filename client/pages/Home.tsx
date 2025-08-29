@@ -2,6 +2,7 @@ import SEO from "@/components/site/SEO";
 import { t, useLocale, localized } from "@/lib/i18n";
 import { settings } from "@/data/content";
 import { Link } from "react-router-dom";
+import Star from "@/components/site/Starfield";
 
 export default function Home() {
   const { locale } = useLocale();
