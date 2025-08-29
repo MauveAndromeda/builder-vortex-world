@@ -25,6 +25,7 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.post("/api/subscribe", handleSubscribe);
   app.post("/api/contact", handleContact);
+  app.get("/api/stripe/publishable-key", (await import("./routes/stripe")).handlePublicKey);
   app.post("/api/stripe/create-intent", handleCreateIntent);
 
   return app;
