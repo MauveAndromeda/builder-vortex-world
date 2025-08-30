@@ -13,6 +13,7 @@ export default function Starfield({ className = "", avoidRects = [] as DOMRect[]
     const ctx = canvas.getContext("2d")!;
     let raf = 0;
     let running = true;
+    let frames = 0; let startTime = performance.now(); let lowFps = false;
     let w = (canvas.width = canvas.offsetWidth);
     let h = (canvas.height = canvas.offsetHeight);
     const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -35,7 +36,7 @@ export default function Starfield({ className = "", avoidRects = [] as DOMRect[]
     window.addEventListener("scroll", onScroll, { passive: true });
 
     // Meteors
-    let nextMeteorAt = performance.now() + rand(25000, 45000);
+    let nextMeteorAt = performance.now() + rand(15000, 30000);
     let meteor: { x: number; y: number; vx: number; vy: number; life: number } | null = null;
 
     function rand(min: number, max: number) { return Math.random() * (max - min) + min; }
@@ -64,7 +65,7 @@ export default function Starfield({ className = "", avoidRects = [] as DOMRect[]
     }
 
     function scheduleMeteor(now: number) {
-      nextMeteorAt = now + rand(25000, 45000);
+      nextMeteorAt = now + rand(15000, 30000);
     }
 
     function startMeteor() {
@@ -98,8 +99,14 @@ export default function Starfield({ className = "", avoidRects = [] as DOMRect[]
       const mx = w * 0.85, my = h * 0.15, mr = 26;
       ctx.fillStyle = "rgba(255,255,230,0.9)";
       ctx.beginPath(); ctx.arc(mx, my, mr, 0, Math.PI * 2); ctx.fill();
+      // simple moon phase approximation
+      const now = new Date();
+      const synodic = 29.53058867;
+      const ref = new Date('2021-01-13T05:00:00Z').getTime();
+      const phase = ((now.getTime() - ref) / (86400*1000)) % synodic / synodic; // 0 new, 0.5 full
+      const offset = (phase < 0.5 ? 1 - phase*2 : (phase-0.5)*2) * 10; // 0..10
       ctx.globalCompositeOperation = "destination-out";
-      ctx.beginPath(); ctx.arc(mx + 8, my - 2, mr, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(mx + offset, my - 2, mr, 0, Math.PI * 2); ctx.fill();
       ctx.globalCompositeOperation = "source-over";
     }
 
@@ -116,8 +123,15 @@ export default function Starfield({ className = "", avoidRects = [] as DOMRect[]
     };
     document.addEventListener("visibilitychange", onVisibility);
 
+    // lantern mode
+    let lx = w*0.5, ly = h*0.5;
+    function onPointer(e: PointerEvent){ const rect = canvas.getBoundingClientRect(); lx = e.clientX - rect.left; ly = e.clientY - rect.top; }
+    canvas.addEventListener('pointermove', onPointer);
+
     const loop = (t: number) => {
       if (!running) return;
+      frames++;
+      if (!lowFps && frames % 60 === 0){ const elapsed = (t - startTime)/1000; const fps = frames/Math.max(0.5, elapsed); if (fps < 30){ lowFps = true; } }
       // background
       ctx.clearRect(0, 0, w, h);
       const g = ctx.createLinearGradient(0, 0, 0, h);
@@ -129,10 +143,19 @@ export default function Starfield({ className = "", avoidRects = [] as DOMRect[]
       drawLayer(layerFront, t, 0.011);
       drawMoon();
 
+      // lantern glow
+      ctx.globalCompositeOperation = 'lighter';
+      const rg = ctx.createRadialGradient(lx, ly, 0, lx, ly, Math.min(w,h)*0.25);
+      rg.addColorStop(0, 'rgba(255,255,255,0.06)');
+      rg.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = rg; ctx.fillRect(0,0,w,h);
+      ctx.globalCompositeOperation = 'source-over';
+
       // meteors timing
       if (t >= nextMeteorAt) { startMeteor(); scheduleMeteor(t); }
       drawMeteor();
 
+      if (lowFps) { running = false; return; }
       raf = requestAnimationFrame(loop);
     };
 
@@ -144,6 +167,7 @@ export default function Starfield({ className = "", avoidRects = [] as DOMRect[]
       window.removeEventListener("resize", onResize);
       window.removeEventListener("scroll", onScroll as any);
       document.removeEventListener("visibilitychange", onVisibility);
+      canvas.removeEventListener('pointermove', onPointer as any);
     };
   }, [reduce, avoidRects]);
 
