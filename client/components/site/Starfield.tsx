@@ -409,8 +409,9 @@ export default function Starfield({
       window.removeEventListener("scroll", onScroll as any);
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("pointermove", onPointer as any);
+      try { clearInterval(regenId); } catch {}
     };
-  }, [reduce, avoidRects]);
+  }, [reduce, avoidRects, mode]);
 
   return <canvas ref={canvasRef} className={className} aria-hidden />;
 }
