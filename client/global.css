@@ -143,4 +143,9 @@
   .shine::after{ content:""; position:absolute; inset: -100%; background: linear-gradient(60deg, transparent, rgba(255,255,255,.18), transparent); transform: translateX(-100%); }
   .shine:hover::after{ animation: shine-move 900ms ease; }
   @keyframes shine-move{ from{ transform: translateX(-100%);} to{ transform: translateX(100%);} }
+
+  .bot{ animation: bot-bob 3s ease-in-out infinite; }
+  .bot-eye{ transform-origin: center; animation: bot-blink 5s infinite; }
+  @keyframes bot-bob{ 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-2px);} }
+  @keyframes bot-blink{ 0%,92%,100%{ transform: scaleY(1);} 95%{ transform: scaleY(0.1);} }
 }
