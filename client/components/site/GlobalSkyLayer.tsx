@@ -12,7 +12,7 @@ export default function GlobalSkyLayer() {
       id="global-sky-layer"
       aria-hidden
       className="pointer-events-none fixed inset-0"
-      style={{ zIndex: 0 }}
+      style={{ zIndex: -1 }}
     >
       <div className="absolute inset-0" style={{
         background: "linear-gradient(180deg, #0a1b3f 0%, #152a5c 100%)",
