@@ -124,6 +124,11 @@ export default function Home() {
         }}
       />
       <div className="absolute inset-0" />
+      <div className="pointer-events-auto absolute top-3 left-1/2 -translate-x-1/2 text-white text-xs">
+        <div className="rounded-full bg-white/10 backdrop-blur px-3 py-1 border border-white/20 shadow-sm">
+          接受 cookies 并共享位置可获得更好的体验哦
+        </div>
+      </div>
       <div className="pointer-events-none absolute top-0 left-0 w-64 h-40">
         <div className="meteor-line" style={{ animationDelay: "1s" }} />
       </div>
