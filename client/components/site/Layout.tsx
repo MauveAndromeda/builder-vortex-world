@@ -2,6 +2,7 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { t, useLocale, localized } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { ThemeControls } from "./ThemeControls";
 
 export function LocaleSwitcher() {
   const { locale, setLocale } = useLocale();
@@ -109,6 +110,7 @@ export function Header() {
           </nav>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeControls />
           {user ? (
             <Link
               to={localized("/account/purchases", locale)}
@@ -122,14 +124,7 @@ export function Header() {
                 to={localized("/account/sign-in", locale)}
                 className="opacity-80 hover:opacity-100"
               >
-                Sign in
-              </Link>
-              <span className="opacity-40">/</span>
-              <Link
-                to={localized("/account/register", locale)}
-                className="opacity-80 hover:opacity-100"
-              >
-                Register
+                User Center
               </Link>
             </div>
           )}
