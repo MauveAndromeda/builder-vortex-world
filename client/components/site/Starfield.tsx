@@ -82,13 +82,14 @@ export default function Starfield({
       const gCount = mode === "night" ? 5 : mode === "dusk" || mode === "dawn" ? 3 : 1;
       const cCount = mode === "night" ? 14 : mode === "dusk" || mode === "dawn" ? 9 : 4;
       const pCount = mode === "night" ? 2 : mode === "dusk" ? 1 : 0;
-      galaxies = Array.from({ length: gCount }, () => ({
+      galaxies = Array.from({ length: gCount }, (_, i) => ({
         x: rnd() * w,
         y: rnd() * h * 0.6,
         rx: 28 + rnd() * 36,
         ry: 12 + rnd() * 22,
         rot: rnd() * Math.PI,
         tw: rnd() * Math.PI * 2,
+        name: catalog[(i + Math.floor(rnd() * catalog.length)) % catalog.length],
       }));
       clusters = Array.from({ length: cCount }, () => ({
         x: rnd() * w,
