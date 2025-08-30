@@ -32,23 +32,26 @@ export default function Admin() {
   if (!token) return <AdminLogin onToken={save} />;
 
   return (
-    <section className="py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Admin</h1>
-        <div className="flex items-center gap-2">
-          <button onClick={() => nav(-1)} className="rounded border px-3 py-1 text-sm">Back</button>
-          <button onClick={clear} className="rounded border px-3 py-1 text-sm">Sign out</button>
+    <>
+      <GlobalSkyLayer />
+      <section className="py-10">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold">Admin</h1>
+          <div className="flex items-center gap-2">
+            <button onClick={() => nav(-1)} className="rounded border px-3 py-1 text-sm">Back</button>
+            <button onClick={clear} className="rounded border px-3 py-1 text-sm">Sign out</button>
+          </div>
         </div>
-      </div>
-      <div className="mt-4 flex gap-2 text-sm">
-        <button onClick={() => setTab("content")} className={`rounded-full px-3 py-1 ${tab==="content"?"bg-foreground text-background":"border"}`}>Content</button>
-        <button onClick={() => setTab("stats")} className={`rounded-full px-3 py-1 ${tab==="stats"?"bg-foreground text-background":"border"}`}>Stats</button>
-        <button onClick={() => setTab("ai")} className={`rounded-full px-3 py-1 ${tab==="ai"?"bg-foreground text-background":"border"}`}>AI Tools</button>
-      </div>
-      {tab === "content" && <AdminContent token={token} />}
-      {tab === "stats" && <AdminStats token={token} />}
-      {tab === "ai" && <AdminAI token={token} />}
-    </section>
+        <div className="mt-4 flex gap-2 text-sm">
+          <button onClick={() => setTab("content")} className={`rounded-full px-3 py-1 ${tab==="content"?"bg-foreground text-background":"border"}`}>Content</button>
+          <button onClick={() => setTab("stats")} className={`rounded-full px-3 py-1 ${tab==="stats"?"bg-foreground text-background":"border"}`}>Stats</button>
+          <button onClick={() => setTab("ai")} className={`rounded-full px-3 py-1 ${tab==="ai"?"bg-foreground text-background":"border"}`}>AI Tools</button>
+        </div>
+        {tab === "content" && <AdminContent token={token} />}
+        {tab === "stats" && <AdminStats token={token} />}
+        {tab === "ai" && <AdminAI token={token} />}
+      </section>
+    </>
   );
 }
 
