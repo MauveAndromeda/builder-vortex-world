@@ -18,10 +18,10 @@ root.render(
 
 if (import.meta.hot) {
   import.meta.hot.accept((newModule) => {
-    // Re-render the latest App on HMR without re-creating the root
+    const NextApp = (newModule?.default ?? App) as React.ComponentType;
     root.render(
       <React.StrictMode>
-        {(newModule?.default ?? App) as unknown as React.ReactElement}
+        <NextApp />
       </React.StrictMode>,
     );
   });
