@@ -1,9 +1,9 @@
 import SEO from "@/components/site/SEO";
 import { t, useLocale, localized } from "@/lib/i18n";
-import { settings, works } from "@/data/content";
+import { settings, works as allWorks } from "@/data/content";
 import { Link } from "react-router-dom";
 import Star from "@/components/site/Starfield";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function Home() {
   const { locale } = useLocale();
@@ -37,6 +37,22 @@ export default function Home() {
     items.forEach((el, i) => { el.dataset.idx = String(i); io.observe(el); });
     return () => io.disconnect();
   }, []);
+
+  const [favs, setFavs] = useState<Set<string>>(()=>{
+    try { return new Set<string>(JSON.parse(localStorage.getItem("favs")||"[]")); } catch { return new Set(); }
+  });
+  const [onlyFavs, setOnlyFavs] = useState(false);
+  useEffect(()=>{ try { localStorage.setItem("favs", JSON.stringify(Array.from(favs))); } catch {} },[favs]);
+
+  const worksSorted = useMemo(()=>
+    [...allWorks].filter(w=>w.published).sort((a,b)=> new Date(b.date).getTime()-new Date(a.date).getTime())
+  ,[]);
+  const featured = worksSorted.slice(0,3);
+  const others = (onlyFavs ? worksSorted.filter(w=>favs.has(w.slug)) : worksSorted).slice(3);
+
+  function toggleFav(slug:string){
+    setFavs(prev=>{ const n = new Set(prev); if (n.has(slug)) n.delete(slug); else n.add(slug); return n; });
+  }
 
   return (
     <section className="relative py-16 md:py-24 overflow-hidden rounded-3xl">
@@ -77,6 +93,52 @@ export default function Home() {
         </div>
       </div>
 
+      <div className="relative mt-10 flex items-center gap-4 text-white" data-reveal>
+        <img src="/placeholder.svg" alt="avatar" className="h-12 w-12 rounded-full ring-2 ring-white/40" />
+        <div>
+          <div className="font-semibold">YCity Collective</div>
+          <div className="text-sm opacity-80">夜行文字与城市边角的采集者。写作、策展、以及把白噪声做成诗。</div>
+        </div>
+      </div>
+
+      <div className="relative mt-12">
+        <div className="flex items-center justify-between text-white mb-4">
+          <h2 className="text-lg font-semibold">精选文章</h2>
+          <label className="text-sm flex items-center gap-2"><input type="checkbox" checked={onlyFavs} onChange={(e)=>setOnlyFavs(e.target.checked)} />只看收藏</label>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {featured.map(w=> (
+            <Link key={w.slug} to={localized(`/work/${w.slug}`, locale)} className="relative rounded-2xl border border-white/10 bg-white/5 p-4 text-white ui-float shine">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-base font-semibold hover:underline underline-offset-4 decoration-white/40">{w.title}</div>
+                  <div className="text-xs opacity-80 mt-1">{w.author} · {new Date(w.date).toLocaleDateString()}</div>
+                </div>
+                <button aria-label="favorite" onClick={(e)=>{e.preventDefault(); toggleFav(w.slug);}} className="ml-auto text-sm px-2 py-1 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 transition">{favs.has(w.slug)?"♥":"♡"}</button>
+              </div>
+              <p className="text-sm opacity-90 mt-3 line-clamp-3">{w.excerpt}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      <div className="relative mt-10">
+        <h3 className="text-white text-base font-semibold mb-3">全部文章</h3>
+        <div className="grid gap-3 md:grid-cols-3">
+          {others.map(w=> (
+            <Link key={w.slug} to={localized(`/work/${w.slug}`, locale)} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white ui-float">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="font-medium hover:underline underline-offset-4 decoration-white/30">{w.title}</div>
+                  <div className="text-xs opacity-80 mt-1">{w.author}</div>
+                </div>
+                <button aria-label="favorite" onClick={(e)=>{e.preventDefault(); toggleFav(w.slug);}} className="ml-auto text-sm px-2 py-1 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 transition">{favs.has(w.slug)?"♥":"♡"}</button>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       <div className="relative mt-16 grid gap-6 md:grid-cols-3">
         {["Read quietly","Own your library","Built with care"].map((x,i)=> (
           <div key={i} className="rounded-2xl border border-white/10 bg-white/5 p-6 text-white ui-float" data-reveal data-idx={i}>
@@ -90,8 +152,8 @@ export default function Home() {
       <div className="relative mt-16">
         <h2 className="sr-only">Authors</h2>
         <div className="grid gap-4 md:grid-cols-3">
-          {Array.from(new Set(works.map(w=>w.author))).map((name)=>{
-            const count = works.filter(w=>w.author===name).length;
+          {Array.from(new Set(allWorks.map(w=>w.author))).map((name)=>{
+            const count = allWorks.filter(w=>w.author===name).length;
             return (
               <Link key={name} to={localized(`/works?q=${encodeURIComponent(name)}`, locale)} className="rounded-2xl border border-white/10 bg-white/5 p-5 text-white ui-float">
                 <div className="text-sm opacity-80">作者</div>
