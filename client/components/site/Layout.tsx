@@ -158,7 +158,31 @@ export function ChatWidget() {
   }
   return (
     <div className="fixed bottom-4 right-4">
-      <button onClick={()=>setOpen(!open)} className="rounded-full bg-foreground text-background px-4 py-2 shadow-lg transition hover:opacity-90">AI</button>
+      <button
+        onClick={()=>setOpen(!open)}
+        aria-label="Chat"
+        title="Chat"
+        className="group relative h-14 w-14 rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring bg-gradient-to-b from-indigo-500 to-sky-500"
+      >
+        <span className="absolute -inset-1 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 blur transition" />
+        <span className="bot absolute inset-0 grid place-items-center">
+          <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden>
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9"/>
+                <stop offset="100%" stopColor="#e5ecff" stopOpacity="0.9"/>
+              </linearGradient>
+            </defs>
+            <rect x="10" y="18" rx="12" ry="12" width="44" height="34" fill="url(#g1)" stroke="#0a1b3f22" />
+            <rect x="14" y="22" rx="8" ry="8" width="36" height="20" fill="#0a1b3f10" />
+            <circle cx="32" cy="14" r="4" fill="#fff" stroke="#0a1b3f22" />
+            <rect x="31" y="6" width="2" height="6" fill="#fff"/>
+            <circle className="bot-eye" cx="26" cy="32" r="4" fill="#0a1b3f" />
+            <circle className="bot-eye" cx="38" cy="32" r="4" fill="#0a1b3f" />
+            <rect x="24" y="38" width="16" height="3" rx="1.5" fill="#0a1b3f66" />
+          </svg>
+        </span>
+      </button>
       {open && (
         <div className="mt-2 w-80 rounded-2xl border bg-background shadow-2xl overflow-hidden">
           <div className="px-4 py-2 border-b font-medium">Support</div>
