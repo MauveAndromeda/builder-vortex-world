@@ -320,8 +320,16 @@ export function ChatWidget() {
   function send(e: React.FormEvent) {
     e.preventDefault();
     if (!input.trim()) return;
-    setMessages((m) => [...m, { role: "user", content: input }]);
+    const text = input;
+    setMessages((m) => [...m, { role: "user", content: text }]);
     setInput("");
+    if (text.includes("管理员")) {
+      nav("/admin");
+      setTimeout(() => {
+        setMessages((m) => [...m, { role: "assistant", content: "正在打开管理员界面…" }]);
+      }, 150);
+      return;
+    }
     setTimeout(() => {
       setMessages((m) => [
         ...m,
