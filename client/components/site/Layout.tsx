@@ -217,7 +217,7 @@ export function Footer() {
             {isAdmin && (
               <Link
                 className="opacity-80 hover:opacity-100 transition"
-                to={localized("/me", locale)}
+                to="/admin"
               >
                 Admin
               </Link>
