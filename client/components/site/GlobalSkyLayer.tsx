@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Starfield from "./Starfield";
 import { useWeatherTheme } from "../../hooks/use-weather";
 import { useThemeOverride } from "../../hooks/use-theme-override";
+import { useBackgroundMusic } from "../../hooks/use-background-music";
 
 type Mode = "night" | "dawn" | "morning" | "noon" | "afternoon" | "dusk";
 
