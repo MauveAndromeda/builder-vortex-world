@@ -132,4 +132,10 @@
   .ui-glow:hover { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.18)); }
   [data-reveal] { opacity: 0; transform: translateY(4px); transition: opacity 260ms ease, transform 260ms cubic-bezier(.2,.8,.2,1); }
   .reveal-in { opacity: 1 !important; transform: translateY(0) !important; }
+
+  .meteor-line{ position:absolute; top:16px; left:-100px; width:140px; height:2px; background: linear-gradient(90deg, rgba(255,255,255,.95), rgba(255,255,255,0)); transform: rotate(25deg); filter: drop-shadow(0 0 6px rgba(255,255,255,.5)); animation: meteor-left 12s linear infinite; opacity:.85 }
+  .meteor-right{ left: auto; right:-100px; transform: rotate(-25deg); background: linear-gradient(270deg, rgba(255,255,255,.95), rgba(255,255,255,0)); animation: meteor-right 12s linear infinite }
+  @keyframes meteor-left{ 0%{ transform: translate3d(0,0,0) rotate(25deg); opacity:0 } 8%{ opacity:1 } 100%{ transform: translate3d(260px,100px,0) rotate(25deg); opacity:0 } }
+  @keyframes meteor-right{ 0%{ transform: translate3d(0,0,0) rotate(-25deg); opacity:0 } 8%{ opacity:1 } 100%{ transform: translate3d(-260px,100px,0) rotate(-25deg); opacity:0 } }
+  @media (prefers-reduced-motion: reduce){ .meteor-line, .meteor-right{ animation: none !important } }
 }
