@@ -156,8 +156,8 @@ export default function Starfield({
     }
 
     function scheduleMeteor(now: number) {
-      const base = mode === "night" ? 1600 : mode === "dusk" || mode === "dawn" ? 2400 : 4000;
-      nextMeteorAt = now + rand(base, base + 2000);
+      const base = mode === "night" ? 6500 : mode === "dusk" || mode === "dawn" ? 9000 : 12000;
+      nextMeteorAt = now + rand(base, base + 4000);
     }
 
     function spawnMeteor() {
