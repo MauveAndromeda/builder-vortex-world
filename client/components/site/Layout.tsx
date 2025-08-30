@@ -163,6 +163,14 @@ export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
   const [input, setInput] = useState("");
+  async function greet(){
+    const h = new Date().getHours();
+    const hello = h<5?"Good night":"Good "+(h<12?"morning":h<18?"afternoon":"evening");
+    try{
+      const r = await fetch('/api/ai/poem'); const j = await r.json();
+      setMessages([{ role:'assistant', content: `YCity Friend · ${hello}\n${j.line || 'Welcome to the night library.'}` }]);
+    }catch{ setMessages([{ role:'assistant', content:`YCity Friend · ${hello}\nWelcome to the night library.` }]); }
+  }
   function send(e: React.FormEvent) {
     e.preventDefault();
     if (!input.trim()) return;
@@ -175,7 +183,7 @@ export function ChatWidget() {
   return (
     <div className="fixed bottom-4 right-4">
       <button
-        onClick={()=>setOpen(!open)}
+        onClick={()=>{ const n = !open; setOpen(n); if(n && messages.length===0){ greet(); } }}
         aria-label="Chat"
         title="Chat"
         className="group relative h-14 w-14 rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring bg-gradient-to-b from-indigo-500 to-sky-500"
@@ -201,7 +209,7 @@ export function ChatWidget() {
       </button>
       {open && (
         <div className="mt-2 w-80 rounded-2xl border bg-background shadow-2xl overflow-hidden">
-          <div className="px-4 py-2 border-b font-medium">Support</div>
+          <div className="px-4 py-2 border-b font-medium">YCity Friend</div>
           <div className="max-h-64 overflow-auto p-3 space-y-2 text-sm">
             {messages.map((m,i)=>(
               <div key={i} className={cn("px-3 py-2 rounded-xl max-w-[85%]", m.role==='user' ? "ml-auto bg-foreground text-background" : "bg-muted")}>{m.content}</div>
