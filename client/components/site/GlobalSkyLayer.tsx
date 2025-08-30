@@ -27,17 +27,17 @@ export default function GlobalSkyLayer() {
   const theme = useMemo(() => {
     switch (mode) {
       case "dawn":
-        return { grad: { from: "#1a2548", to: "#f6b37b" }, starScale: 0.35, overlay: 0.18, sun: true, moon: true };
+        return { grad: { from: "#2a3768", to: "#f6c38f" }, starScale: 0.35, overlay: 0.12, sun: true, moon: true };
       case "morning":
-        return { grad: { from: "#5fb0ff", to: "#a2d9ff" }, starScale: 0.08, overlay: 0.08, sun: true, moon: false };
+        return { grad: { from: "#78bfff", to: "#b9e2ff" }, starScale: 0.08, overlay: 0.05, sun: true, moon: false };
       case "noon":
-        return { grad: { from: "#6fc3ff", to: "#d2f0ff" }, starScale: 0.05, overlay: 0.06, sun: true, moon: false };
+        return { grad: { from: "#86cfff", to: "#e0f6ff" }, starScale: 0.05, overlay: 0.04, sun: true, moon: false };
       case "afternoon":
-        return { grad: { from: "#5aa0ff", to: "#bcdfff" }, starScale: 0.07, overlay: 0.08, sun: true, moon: false };
+        return { grad: { from: "#6fb5ff", to: "#c9e4ff" }, starScale: 0.07, overlay: 0.05, sun: true, moon: false };
       case "dusk":
-        return { grad: { from: "#223058", to: "#ff9361" }, starScale: 0.35, overlay: 0.14, sun: true, moon: true };
+        return { grad: { from: "#2b3a6f", to: "#ffa97c" }, starScale: 0.35, overlay: 0.10, sun: true, moon: true };
       default:
-        return { grad: { from: "#0a1b3f", to: "#152a5c" }, starScale: 1, overlay: 0.30, sun: false, moon: true };
+        return { grad: { from: "#1b2f6f", to: "#27407f" }, starScale: 1, overlay: 0.20, sun: false, moon: true };
     }
   }, [mode]);
 
