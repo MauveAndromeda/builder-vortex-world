@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Starfield from "./Starfield";
 import { useWeatherTheme } from "../../hooks/use-weather";
+import { useThemeOverride } from "../../hooks/use-theme-override";
 
 type Mode = "night" | "dawn" | "morning" | "noon" | "afternoon" | "dusk";
 
@@ -19,11 +20,15 @@ export default function GlobalSkyLayer() {
     return !document.getElementById("global-sky-layer");
   }, []);
 
-  const [mode, setMode] = useState<Mode>(() => resolveModeByHour(new Date().getHours()));
+  const { manualMode, manualWeather } = useThemeOverride();
+
+  const [autoMode, setAutoMode] = useState<Mode>(() => resolveModeByHour(new Date().getHours()));
   useEffect(() => {
-    const id = setInterval(() => setMode(resolveModeByHour(new Date().getHours())), 60 * 1000);
+    const id = setInterval(() => setAutoMode(resolveModeByHour(new Date().getHours())), 60 * 1000);
     return () => clearInterval(id);
   }, []);
+
+  const mode = manualMode || autoMode;
 
   const theme = useMemo(() => {
     switch (mode) {
@@ -47,7 +52,7 @@ export default function GlobalSkyLayer() {
   const isGolden = mode === "dawn" || mode === "dusk";
 
   const weather = useWeatherTheme();
-  const wc = weather.condition;
+  const wc = manualWeather || weather.condition;
   const cloudCount = isDay ? (wc === "overcast" ? 12 : wc === "storm" ? 10 : wc === "cloudy" ? 9 : 6) : 0;
   const cloudOpacity = isDay ? (wc === "overcast" ? 0.5 : wc === "storm" ? 0.55 : wc === "cloudy" ? 0.42 : 0.35) : 0.35;
   const tint = (() => {
