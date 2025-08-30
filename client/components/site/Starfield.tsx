@@ -130,7 +130,7 @@ export default function Starfield({
     ) {
       const offset = Math.min(24, scrollY * parallax);
       for (const s of stars) {
-        const a = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t / 900 + s.tw));
+        const a = 0.16 + 0.24 * (0.5 + 0.5 * Math.sin(t / 900 + s.tw));
         ctx.globalAlpha = a;
         ctx.fillStyle = "#fff";
         ctx.beginPath();
@@ -187,7 +187,7 @@ export default function Starfield({
       lx = e.clientX - rect.left;
       ly = e.clientY - rect.top;
     }
-    canvas.addEventListener("pointermove", onPointer);
+    window.addEventListener("pointermove", onPointer, { passive: true });
 
     const loop = (t: number) => {
       if (!running) return;
@@ -220,9 +220,9 @@ export default function Starfield({
         0,
         lx,
         ly,
-        Math.min(w, h) * 0.25,
+        Math.min(w, h) * 0.22,
       );
-      rg.addColorStop(0, "rgba(255,255,255,0.06)");
+      rg.addColorStop(0, "rgba(255,255,255,0.12)");
       rg.addColorStop(1, "rgba(255,255,255,0)");
       ctx.fillStyle = rg;
       ctx.fillRect(0, 0, w, h);
@@ -252,7 +252,7 @@ export default function Starfield({
       window.removeEventListener("resize", onResize);
       window.removeEventListener("scroll", onScroll as any);
       document.removeEventListener("visibilitychange", onVisibility);
-      canvas.removeEventListener("pointermove", onPointer as any);
+      window.removeEventListener("pointermove", onPointer as any);
     };
   }, [reduce, avoidRects]);
 
