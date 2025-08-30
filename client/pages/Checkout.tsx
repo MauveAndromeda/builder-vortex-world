@@ -2,7 +2,7 @@ import { useLocale, t, localized } from "@/lib/i18n";
 import SEO from "@/components/site/SEO";
 import { works, getChaptersByWork } from "@/data/content";
 import { useEffect, useMemo, useState } from "react";
-import { useLocale, t } from "@/lib/i18n";
+import * as I18N from "@/lib/i18n";
 import { toast } from "sonner";
 import { useParams, useLocation } from "react-router-dom";
 
@@ -17,7 +17,7 @@ async function getPublishableKey() {
 }
 
 export default function Checkout() {
-  const { locale } = useLocale();
+  const { locale } = I18N.useLocale();
   const params = useParams();
   const loc = useLocation();
   let mode = "" as string;
@@ -99,7 +99,7 @@ export default function Checkout() {
 
   return (
     <section className="py-16 max-w-xl">
-      <SEO title={`Checkout — ${t("brand", locale)}`} description="Secure checkout" />
+      <SEO title={`Checkout — ${I18N.t("brand", locale)}`} description="Secure checkout" />
       <h1 className="text-3xl font-semibold">Checkout</h1>
       {!item ? (
         <p className="mt-4 text-muted-foreground">Invalid item.</p>
