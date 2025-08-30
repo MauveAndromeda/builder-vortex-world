@@ -2,7 +2,6 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { t, useLocale, localized } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import GlobalSkyLayer from "./GlobalSkyLayer";
 
 export function LocaleSwitcher() {
   const { locale, setLocale } = useLocale();
