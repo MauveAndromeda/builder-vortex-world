@@ -138,4 +138,9 @@
   @keyframes meteor-left{ 0%{ transform: translate3d(0,0,0) rotate(25deg); opacity:0 } 8%{ opacity:1 } 100%{ transform: translate3d(260px,100px,0) rotate(25deg); opacity:0 } }
   @keyframes meteor-right{ 0%{ transform: translate3d(0,0,0) rotate(-25deg); opacity:0 } 8%{ opacity:1 } 100%{ transform: translate3d(-260px,100px,0) rotate(-25deg); opacity:0 } }
   @media (prefers-reduced-motion: reduce){ .meteor-line, .meteor-right{ animation: none !important } }
+
+  .shine{ position: relative; overflow: hidden; }
+  .shine::after{ content:""; position:absolute; inset: -100%; background: linear-gradient(60deg, transparent, rgba(255,255,255,.18), transparent); transform: translateX(-100%); }
+  .shine:hover::after{ animation: shine-move 900ms ease; }
+  @keyframes shine-move{ from{ transform: translateX(-100%);} to{ transform: translateX(100%);} }
 }
