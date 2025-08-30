@@ -41,10 +41,10 @@ export const works: Work[] = [
 ];
 
 export const chapters: Chapter[] = [
-  { work: "the-silent-city", order: 1, title: "Prologue", content: "The city wakes like paper...", price: 1 },
-  { work: "the-silent-city", order: 2, title: "Bridges", content: "Between buildings, a hush.", price: 2 },
-  { work: "letters-to-nowhere", order: 1, title: "Postmark", content: "No return address.", price: 1 },
-  { work: "letters-to-nowhere", order: 2, title: "Sleepless", content: "Ink at 3 a.m.", price: 2 },
+  { work: "the-silent-city", order: 1, title: "Prologue", content: "The city wakes like paper, thin light sliding under the doorframes. Elevators yawn, kettles murmur, and every window becomes a soft lens that remembers the night. I walk the first block with pockets full of tickets and old receipts, reading their dates as if they were coordinates. A tram passes and leaves a ribbon of wind; a sparrow edits the morning with three quick notes. By the time the bakery opens, the street has learned my footsteps and offers them back in echo.", price: 1 },
+  { work: "the-silent-city", order: 2, title: "Bridges", content: "Between buildings, a hush thick as felt. The river wears its bridges like bookmarks, each one saving a chapter of crossings: commuters, confessions, errands that turn into detours. I stop at the center span and look down; coins glitter in the silt like punctuation. Someone on the far bank waves, or maybe they are just talking with their hands. I answer anyway. We compromise on a language of shoulders and breath.", price: 2 },
+  { work: "letters-to-nowhere", order: 1, title: "Postmark", content: "No return address, only a faint ring where a glass once stood. The envelope is the color of weather; its flap remembers being a wing. I hold it to the window and see a silhouette of words, the way bones show through an X‑ray. When I finally tear it open, a dry wind leaves, as if the paper itself had been breathing all night inside my desk.", price: 1 },
+  { work: "letters-to-nowhere", order: 2, title: "Sleepless", content: "Ink at 3 a.m., slow as tide. The apartment is a harbor for small noises: the radiator ticking east, the neighbor’s steps crossing a sea of floorboards. I write on the back of receipts and metro maps, anything with a coastline. By the time the first tram coughs awake, the page has become a room and I am walking through it, turning off lights, touching the frames.", price: 2 },
 ];
 
 export function getChaptersByWork(slug: string) {
