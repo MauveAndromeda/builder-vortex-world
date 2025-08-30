@@ -205,6 +205,55 @@ export default function Starfield({
       ctx.globalAlpha = 1;
     }
 
+    function drawGalaxy(g: Galaxy, t: number) {
+      ctx.save();
+      ctx.translate(g.x, g.y);
+      ctx.rotate(g.rot);
+      const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, g.rx);
+      grad.addColorStop(0, "rgba(255,255,255,0.25)");
+      grad.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = grad;
+      ctx.globalAlpha = 0.35 + 0.25 * (0.5 + 0.5 * Math.sin(t / 1200 + g.tw));
+      ctx.beginPath();
+      ctx.ellipse(0, 0, g.rx, g.ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.globalAlpha = 1;
+    }
+
+    function drawCluster(c: Cluster, t: number) {
+      const grad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
+      grad.addColorStop(0, "rgba(255,255,255,0.12)");
+      grad.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = grad;
+      ctx.globalAlpha = 0.6 + 0.4 * (0.5 + 0.5 * Math.sin(t / 1400 + c.tw));
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    function drawPlanet(p: Planet) {
+      if (p.ring) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(-0.5);
+        ctx.strokeStyle = "rgba(255,255,255,0.35)";
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, p.r * 1.7, p.r * 0.6, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+      const grad = ctx.createRadialGradient(p.x - p.r * 0.4, p.y - p.r * 0.6, 0, p.x, p.y, p.r * 1.2);
+      grad.addColorStop(0, p.color + "cc");
+      grad.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     function drawMoon() {
       const mx = w * 0.85,
         my = h * 0.15,
