@@ -59,7 +59,7 @@ export default function Home() {
       <SEO title={`${t("brand", locale)} — ${hero}`} description="A minimalist literary website for wandering readers." />
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a1b3f] to-[#152a5c]" />
       <div className="absolute inset-0" style={{ backgroundImage: "url(https://cdn.builder.io/api/v1/image/assets%2F2ddbc13a7719400ea5b757207fa45062%2F77a486a89e634e55bb83c9295b42763b?format=webp&width=800)", opacity: 0.25, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-      <div className="absolute inset-0" />
+      <div className="absolute inset-0">{!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? <Star avoidRects={rects} /> : null}</div>
       <div className="pointer-events-none absolute top-0 left-0 w-64 h-40">
         <div className="meteor-line" style={{ animationDelay: '1s' }} />
       </div>
