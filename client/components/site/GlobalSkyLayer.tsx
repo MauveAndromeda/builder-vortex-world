@@ -170,49 +170,103 @@ export default function GlobalSkyLayer() {
 
       {(wc === "rain" || wc === "storm") && (
         <div className="absolute inset-0 overflow-hidden">
-          {Array.from({ length: 40 }).map((_, i) => (
-            <div key={i} className="absolute" style={{
-              top: `-${Math.random() * 20}vh`,
-              left: `${(i * 97) % 100}%`,
-              width: 2,
-              height: 14,
-              background: "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 60%, rgba(255,255,255,0.9) 100%)",
-              transform: "rotate(12deg)",
-              opacity: wc === "storm" ? 0.75 : 0.6,
-              animation: `rain-fall ${1 + (i % 10) * 0.12}s linear ${(i % 20) * 0.15}s infinite` as any,
+          {/* Heavy rain */}
+          {Array.from({ length: wc === "storm" ? 80 : 60 }).map((_, i) => (
+            <div key={`rain-${i}`} className="absolute" style={{
+              top: `-${Math.random() * 30}vh`,
+              left: `${(i * 71) % 100}%`,
+              width: wc === "storm" ? 3 : 2,
+              height: wc === "storm" ? 18 : 14,
+              background: wc === "storm" ?
+                "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,1) 100%)" :
+                "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 60%, rgba(255,255,255,0.9) 100%)",
+              transform: `rotate(${wc === "storm" ? 8 + Math.random() * 8 : 12}deg)`,
+              opacity: wc === "storm" ? 0.85 : 0.7,
+              animation: `rain-fall ${wc === "storm" ? 0.8 + (i % 8) * 0.1 : 1 + (i % 10) * 0.12}s linear ${(i % 20) * 0.1}s infinite` as any,
+            }} />
+          ))}
+          {/* Rain splash effect for storm */}
+          {wc === "storm" && Array.from({ length: 15 }).map((_, i) => (
+            <div key={`splash-${i}`} className="absolute" style={{
+              bottom: "0%",
+              left: `${(i * 83) % 100}%`,
+              width: 8,
+              height: 2,
+              background: "rgba(255,255,255,0.6)",
+              borderRadius: "50%",
+              animation: `rain-splash ${2 + (i % 6) * 0.3}s ease-out ${(i % 12) * 0.2}s infinite` as any,
             }} />
           ))}
         </div>
       )}
 
-      {wc === "snow" && (
+      {(wc === "snow" || wc === "blizzard") && (
         <div className="absolute inset-0 overflow-hidden">
-          {Array.from({ length: 60 }).map((_, i) => (
-            <div key={i} className="absolute" style={{
-              top: `-${Math.random() * 20}vh`,
-              left: `${(i * 61) % 100}%`,
-              width: 4,
-              height: 4,
+          {/* Snowflakes */}
+          {Array.from({ length: wc === "blizzard" ? 120 : 80 }).map((_, i) => {
+            const size = wc === "blizzard" ? 2 + Math.random() * 4 : 3 + Math.random() * 3;
+            return (
+              <div key={`snow-${i}`} className="absolute" style={{
+                top: `-${Math.random() * 30}vh`,
+                left: `${(i * 47) % 100}%`,
+                width: size,
+                height: size,
+                borderRadius: 9999,
+                background: "rgba(255,255,255,0.95)",
+                boxShadow: `0 0 ${size * 2}px rgba(255,255,255,0.8)`,
+                animation: wc === "blizzard" ?
+                  `blizzard-fall ${3 + (i % 8) * 0.5}s linear ${(i % 25) * 0.15}s infinite` :
+                  `snow-fall ${5 + (i % 10) * 0.8}s linear ${(i % 30) * 0.25}s infinite`,
+              } as any} />
+            );
+          })}
+          {/* Larger snowflakes for depth */}
+          {Array.from({ length: wc === "blizzard" ? 25 : 15 }).map((_, i) => (
+            <div key={`bigsnow-${i}`} className="absolute" style={{
+              top: `-${Math.random() * 25}vh`,
+              left: `${(i * 79) % 100}%`,
+              width: wc === "blizzard" ? 6 + Math.random() * 4 : 7,
+              height: wc === "blizzard" ? 6 + Math.random() * 4 : 7,
               borderRadius: 9999,
-              background: "rgba(255,255,255,0.95)",
-              boxShadow: "0 0 6px rgba(255,255,255,0.8)",
-              animation: `snow-fall ${5 + (i % 10) * 0.8}s linear ${(i % 30) * 0.25}s infinite` as any,
-            }} />
+              background: "rgba(255,255,255,0.9)",
+              boxShadow: "0 0 12px rgba(255,255,255,0.9)",
+              opacity: 0.8,
+              animation: wc === "blizzard" ?
+                `blizzard-fall ${2.5 + (i % 6) * 0.4}s linear ${(i % 20) * 0.18}s infinite` :
+                `snow-fall ${4 + (i % 8) * 0.6}s linear ${(i % 25) * 0.22}s infinite`,
+            } as any} />
           ))}
         </div>
       )}
 
       {wc === "hail" && (
         <div className="absolute inset-0 overflow-hidden">
-          {Array.from({ length: 35 }).map((_, i) => (
-            <div key={i} className="absolute" style={{
-              top: `-${Math.random() * 20}vh`,
-              left: `${(i * 83) % 100}%`,
-              width: 6,
-              height: 6,
+          {/* Hailstones */}
+          {Array.from({ length: 50 }).map((_, i) => {
+            const size = 4 + Math.random() * 6;
+            return (
+              <div key={`hail-${i}`} className="absolute" style={{
+                top: `-${Math.random() * 25}vh`,
+                left: `${(i * 67) % 100}%`,
+                width: size,
+                height: size,
+                borderRadius: 9999,
+                background: "radial-gradient(circle at 30% 30%, rgba(255,255,255,1), rgba(200,220,255,0.9))",
+                boxShadow: "0 0 4px rgba(255,255,255,0.8), inset 1px 1px 2px rgba(255,255,255,0.9)",
+                animation: `hail-fall ${1.2 + (i % 8) * 0.15}s ease-in ${(i % 20) * 0.1}s infinite` as any,
+              }} />
+            );
+          })}
+          {/* Hail bounce effect */}
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={`hail-bounce-${i}`} className="absolute" style={{
+              bottom: "0%",
+              left: `${(i * 91) % 100}%`,
+              width: 3,
+              height: 3,
               borderRadius: 9999,
-              background: "rgba(255,255,255,0.95)",
-              animation: `hail-fall ${1.4 + (i % 8) * 0.1}s linear ${(i % 20) * 0.12}s infinite` as any,
+              background: "rgba(255,255,255,0.7)",
+              animation: `hail-bounce ${1.8 + (i % 6) * 0.3}s ease-out ${(i % 15) * 0.15}s infinite` as any,
             }} />
           ))}
         </div>
@@ -220,16 +274,33 @@ export default function GlobalSkyLayer() {
 
       {wc === "windy" && (
         <div className="absolute inset-0 overflow-hidden">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className="absolute" style={{
-              top: `${10 + (i * 7) % 80}%`,
-              left: "-20%",
-              width: `${60 + (i % 3) * 30}px`,
-              height: 2,
-              background: "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.7), rgba(255,255,255,0))",
-              opacity: 0.35,
-              filter: "blur(0.5px)",
-              animation: `wind-swish ${6 + (i % 4) * 1.2}s linear ${(i % 6) * 0.7}s infinite` as any,
+          {/* Wind streaks */}
+          {Array.from({ length: 18 }).map((_, i) => (
+            <div key={`wind-${i}`} className="absolute" style={{
+              top: `${5 + (i * 5.5) % 90}%`,
+              left: "-25%",
+              width: `${80 + (i % 4) * 40}px`,
+              height: i % 3 === 0 ? 3 : 2,
+              background: i % 3 === 0 ?
+                "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.8), rgba(255,255,255,0.3), rgba(255,255,255,0))" :
+                "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0))",
+              opacity: 0.4,
+              filter: "blur(0.8px)",
+              transform: `skewX(-15deg)`,
+              animation: `wind-swish ${4 + (i % 5) * 1}s ease-in-out ${(i % 8) * 0.5}s infinite` as any,
+            }} />
+          ))}
+          {/* Dust particles */}
+          {Array.from({ length: 25 }).map((_, i) => (
+            <div key={`dust-${i}`} className="absolute" style={{
+              top: `${20 + (i * 3) % 60}%`,
+              left: "-10%",
+              width: 2 + Math.random() * 2,
+              height: 2 + Math.random() * 2,
+              borderRadius: 9999,
+              background: "rgba(255,255,255,0.5)",
+              opacity: 0.6,
+              animation: `wind-dust ${3 + (i % 6) * 0.8}s linear ${(i % 10) * 0.3}s infinite` as any,
             }} />
           ))}
         </div>
@@ -246,10 +317,14 @@ export default function GlobalSkyLayer() {
         @keyframes plane { 0% { transform: translate(-10%, 0) rotate(2deg); } 50% { transform: translate(55%, -2%) rotate(-1deg);} 100% { transform: translate(120%, -4%) rotate(2deg);} }
         @keyframes whale { 0%, 100% { transform: translateX(-50%) translateY(0);} 50% { transform: translateX(-50%) translateY(-3px);} }
         @keyframes birds { from { transform: translate(-10%, 0); } to { transform: translate(110%, 0); } }
-        @keyframes rain-fall { 0% { transform: translateY(-10vh) translateX(0) rotate(12deg); } 100% { transform: translateY(110vh) translateX(8vw) rotate(12deg);} }
-        @keyframes snow-fall { 0% { transform: translateY(-10vh) translateX(0); } 50% { transform: translateY(50vh) translateX(5vw);} 100% { transform: translateY(110vh) translateX(10vw);} }
-        @keyframes hail-fall { 0% { transform: translateY(-10vh); } 100% { transform: translateY(110vh);} }
-        @keyframes wind-swish { 0% { transform: translateX(-20%); opacity: 0; } 10% {opacity: .35;} 90% {opacity:.35;} 100% { transform: translateX(140%); opacity: 0; } }
+        @keyframes rain-fall { 0% { transform: translateY(-15vh) translateX(0); } 100% { transform: translateY(115vh) translateX(8vw);} }
+        @keyframes rain-splash { 0% { opacity: 0; transform: scaleX(0.5) scaleY(2); } 50% { opacity: 1; transform: scaleX(2) scaleY(0.5); } 100% { opacity: 0; transform: scaleX(3) scaleY(0.2); } }
+        @keyframes snow-fall { 0% { transform: translateY(-15vh) translateX(0) rotate(0deg); } 25% { transform: translateX(2vw) rotate(90deg); } 50% { transform: translateY(50vh) translateX(4vw) rotate(180deg);} 75% { transform: translateX(7vw) rotate(270deg); } 100% { transform: translateY(115vh) translateX(10vw) rotate(360deg);} }
+        @keyframes blizzard-fall { 0% { transform: translateY(-20vh) translateX(0) rotate(0deg); } 25% { transform: translateX(-5vw) rotate(90deg); } 50% { transform: translateY(50vh) translateX(15vw) rotate(180deg);} 75% { transform: translateX(20vw) rotate(270deg); } 100% { transform: translateY(120vh) translateX(25vw) rotate(360deg);} }
+        @keyframes hail-fall { 0% { transform: translateY(-15vh) scale(1); } 80% { transform: scale(1.1); } 100% { transform: translateY(115vh) scale(1);} }
+        @keyframes hail-bounce { 0% { opacity: 0; transform: translateY(0) scale(0.5); } 50% { opacity: 1; transform: translateY(-8px) scale(1); } 100% { opacity: 0; transform: translateY(0) scale(0.5); } }
+        @keyframes wind-swish { 0% { transform: translateX(-25%) skewX(-15deg); opacity: 0; } 15% {opacity: .4;} 85% {opacity:.4;} 100% { transform: translateX(150%) skewX(-15deg); opacity: 0; } }
+        @keyframes wind-dust { 0% { transform: translateX(-10%) rotate(0deg); opacity: 0; } 20% {opacity: .6;} 80% {opacity:.6;} 100% { transform: translateX(130%) rotate(360deg); opacity: 0; } }
         @keyframes lightning-flash { 0%, 92%, 100% { background: rgba(255,255,255,0); } 93% { background: rgba(255,255,255,0.55);} 94% { background: rgba(255,255,255,0);} 95% { background: rgba(255,255,255,0.35);} 96% { background: rgba(255,255,255,0);} 98% { background: rgba(255,255,255,0.2);} }
       `}</style>
     </div>
