@@ -11,6 +11,11 @@ export function createServer() {
 
   // Middleware
   app.use(cors());
+  app.use((req, res, next)=>{
+    res.setHeader('Cache-Control','private, no-store');
+    res.setHeader('X-Robots-Tag','noindex, noarchive');
+    next();
+  });
   // Stripe webhook must receive raw body
   app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
   app.use(express.json());
@@ -27,6 +32,11 @@ export function createServer() {
   app.post("/api/contact", handleContact);
   app.get("/api/stripe/publishable-key", handlePublicKey);
   app.post("/api/stripe/create-intent", handleCreateIntent);
+
+  // Minimal endpoints
+  app.get('/api/ai/poem', (_req, res)=>{ res.json({ line: "Tonight the windows learn the names of stars." }); });
+  app.post('/api/achievements', (req, res)=>{ console.log('achievements', req.body); res.json({ ok: true }); });
+  app.post('/api/feedback', (req, res)=>{ console.log('feedback', req.body); res.json({ ok: true }); });
 
   return app;
 }
