@@ -2,12 +2,24 @@ import { useEffect, useRef } from "react";
 
 type Rect = { top: number; bottom: number };
 
+type Mode = "night" | "dawn" | "morning" | "noon" | "afternoon" | "dusk";
+
 export default function Starfield({
   className = "",
   avoidRects = [] as DOMRect[],
+  mode = "night",
+  starScale = 1,
+  showSun = false,
+  showMoon = true,
+  backgroundGradient,
 }: {
   className?: string;
   avoidRects?: DOMRect[];
+  mode?: Mode;
+  starScale?: number; // 0..1
+  showSun?: boolean;
+  showMoon?: boolean;
+  backgroundGradient?: { from: string; to: string } | null; // if null, Starfield won't paint bg
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduce =
@@ -127,10 +139,14 @@ export default function Starfield({
       stars: { x: number; y: number; r: number; tw: number }[],
       t: number,
       parallax: number,
+      scale: number,
     ) {
       const offset = Math.min(24, scrollY * parallax);
       for (const s of stars) {
-        const a = 0.16 + 0.24 * (0.5 + 0.5 * Math.sin(t / 900 + s.tw));
+        const base = 0.12 * scale; // lower base to improve readability
+        const range = 0.18 * scale;
+        const a = base + range * (0.5 + 0.5 * Math.sin(t / 900 + s.tw));
+        if (a <= 0.002) continue;
         ctx.globalAlpha = a;
         ctx.fillStyle = "#fff";
         ctx.beginPath();
@@ -160,6 +176,29 @@ export default function Starfield({
       ctx.arc(mx + offset, my - 2, mr, 0, Math.PI * 2);
       ctx.fill();
       ctx.globalCompositeOperation = "source-over";
+    }
+
+    function drawSun() {
+      const mx = w * 0.85,
+        my = h * 0.15,
+        mr = 28;
+      const color = mode === "dawn" ? "#ffd7a6" : mode === "dusk" ? "#ffb46b" : "#ffe58a";
+      const halo = mode === "noon" ? 0.28 : 0.22;
+      // halo
+      ctx.globalCompositeOperation = "lighter";
+      const rg = ctx.createRadialGradient(mx, my, 0, mx, my, mr * (1 + halo * 2.2));
+      rg.addColorStop(0, color + "cc");
+      rg.addColorStop(1, "rgba(255,200,120,0)");
+      ctx.fillStyle = rg;
+      ctx.beginPath();
+      ctx.arc(mx, my, mr * (1 + halo * 2), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
+      // core
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(mx, my, mr, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     const onResize = () => {
@@ -199,18 +238,29 @@ export default function Starfield({
           lowFps = true;
         }
       }
-      // background
+        // background (optional)
       ctx.clearRect(0, 0, w, h);
-      const g = ctx.createLinearGradient(0, 0, 0, h);
-      g.addColorStop(0, "#0a1b3f");
-      g.addColorStop(1, "#152a5c");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
+      if (backgroundGradient !== null) {
+        const g = ctx.createLinearGradient(0, 0, 0, h);
+        const from = backgroundGradient?.from ?? "#0a1b3f";
+        const to = backgroundGradient?.to ?? "#152a5c";
+        g.addColorStop(0, from);
+        g.addColorStop(1, to);
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, w, h);
+      }
 
-      drawLayer(layerBack, t, 0.004);
-      drawLayer(layerMid, t, 0.007);
-      drawLayer(layerFront, t, 0.011);
-      drawMoon();
+      // stars intensity by mode
+      const intensity = Math.max(0, Math.min(1, starScale)) * (
+        mode === "night" ? 1 : mode === "dusk" || mode === "dawn" ? 0.35 : 0.08
+      );
+
+      drawLayer(layerBack, t, 0.004 * (1 + intensity * 0.2), intensity);
+      drawLayer(layerMid, t, 0.007 * (1 + intensity * 0.2), intensity);
+      drawLayer(layerFront, t, 0.011 * (1 + intensity * 0.2), intensity);
+
+      if (showMoon && (mode === "night" || mode === "dusk")) drawMoon();
+      if (showSun && (mode !== "night")) drawSun();
 
       // lantern glow
       ctx.globalCompositeOperation = "lighter";
