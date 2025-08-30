@@ -357,6 +357,12 @@ export default function Starfield({
       drawLayer(layerMid, t, 0.007 * (1 + intensity * 0.2), intensity);
       drawLayer(layerFront, t, 0.011 * (1 + intensity * 0.2), intensity);
 
+      if (mode !== "noon") {
+        galaxies.forEach((g) => drawGalaxy(g, t));
+        clusters.forEach((c) => drawCluster(c, t));
+        if (mode === "night" || mode === "dusk") planets.forEach((p) => drawPlanet(p));
+      }
+
       if (showMoon && (mode === "night" || mode === "dusk")) drawMoon();
       if (showSun && (mode !== "night")) drawSun();
 
