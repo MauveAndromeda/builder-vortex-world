@@ -169,7 +169,7 @@ export default function Home() {
         data-reveal
       >
         <img
-          src="/placeholder.svg"
+          src="https://cdn.builder.io/api/v1/image/assets%2F2ddbc13a7719400ea5b757207fa45062%2Fb7c4af3e179d4482957c40ee7f50a174"
           alt="avatar"
           className="h-12 w-12 rounded-full ring-2 ring-white/40"
         />
