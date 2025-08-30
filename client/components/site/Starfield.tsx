@@ -64,14 +64,9 @@ export default function Starfield({
     window.addEventListener("scroll", onScroll, { passive: true });
 
     // Meteors
-    let nextMeteorAt = performance.now() + rand(15000, 30000);
-    let meteor: {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      life: number;
-    } | null = null;
+    let nextMeteorAt = performance.now() + rand(2500, 6000);
+    type Meteor = { x: number; y: number; vx: number; vy: number; life: number };
+    let meteors: Meteor[] = [];
 
     function rand(min: number, max: number) {
       return Math.random() * (max - min) + min;
@@ -110,29 +105,32 @@ export default function Starfield({
     }
 
     function scheduleMeteor(now: number) {
-      nextMeteorAt = now + rand(15000, 30000);
+      const base = mode === "night" ? 1600 : mode === "dusk" || mode === "dawn" ? 2400 : 4000;
+      nextMeteorAt = now + rand(base, base + 2000);
     }
 
-    function startMeteor() {
+    function spawnMeteor() {
       const ranges = remapAvoidRects();
       const y = pickSafeY(ranges);
-      const x = rand(0, w * 0.35);
-      meteor = { x, y, vx: 7, vy: 2.7, life: 1 };
+      const x = rand(0, w * 0.55);
+      meteors.push({ x, y, vx: 7, vy: 2.7, life: 1 });
     }
 
-    function drawMeteor() {
-      if (!meteor) return;
-      const m = meteor;
-      m.x += m.vx;
-      m.y += m.vy;
-      m.life *= 0.965;
-      ctx.strokeStyle = `rgba(255,255,255,${m.life})`;
+    function drawMeteors() {
+      if (!meteors.length) return;
       ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(m.x, m.y);
-      ctx.lineTo(m.x - 26, m.y - 10);
-      ctx.stroke();
-      if (m.life < 0.06 || m.x > w + 40 || m.y > h + 40) meteor = null;
+      for (let i = meteors.length - 1; i >= 0; i--) {
+        const m = meteors[i];
+        m.x += m.vx;
+        m.y += m.vy;
+        m.life *= 0.965;
+        ctx.strokeStyle = `rgba(255,255,255,${m.life})`;
+        ctx.beginPath();
+        ctx.moveTo(m.x, m.y);
+        ctx.lineTo(m.x - 26, m.y - 10);
+        ctx.stroke();
+        if (m.life < 0.06 || m.x > w + 40 || m.y > h + 40) meteors.splice(i, 1);
+      }
     }
 
     function drawLayer(
@@ -280,10 +278,12 @@ export default function Starfield({
 
       // meteors timing
       if (t >= nextMeteorAt) {
-        startMeteor();
+        const maxConcurrent = mode === "night" ? 6 : mode === "dusk" || mode === "dawn" ? 4 : 2;
+        const burst = Math.floor(rand(1, 3));
+        for (let i = 0; i < burst; i++) if (meteors.length < maxConcurrent) spawnMeteor();
         scheduleMeteor(t);
       }
-      drawMeteor();
+      drawMeteors();
 
       if (lowFps) {
         running = false;
