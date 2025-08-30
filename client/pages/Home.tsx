@@ -64,15 +64,6 @@ export default function Home() {
     } catch {}
   }, [favs]);
 
-  const worksSorted = useMemo(
-    () =>
-      [...allWorks]
-        .filter((w) => w.published)
-        .sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        ),
-    [],
-  );
   const [adminData, setAdminData] = useState<{ works: typeof allWorks; featured: string[] }>({ works: [], featured: [] });
   useEffect(() => {
     (async () => {
