@@ -292,6 +292,7 @@ export function ChatWidget() {
     { role: "user" | "assistant"; content: string }[]
   >([]);
   const [input, setInput] = useState("");
+  const nav = useNavigate();
   async function greet() {
     const h = new Date().getHours();
     const hello =
