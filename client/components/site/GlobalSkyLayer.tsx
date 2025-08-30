@@ -27,21 +27,24 @@ export default function GlobalSkyLayer() {
   const theme = useMemo(() => {
     switch (mode) {
       case "dawn":
-        return { grad: { from: "#233460", to: "#f2b882" }, starScale: 0.35, overlay: 0.14, sun: true, moon: true };
+        return { grad: { from: "#f7c897", to: "#ffd9b8" }, starScale: 0.28, overlay: 0.10, sun: true, moon: true };
       case "morning":
-        return { grad: { from: "#4e86d6", to: "#8fcbff" }, starScale: 0.06, overlay: 0.12, sun: true, moon: false };
+        return { grad: { from: "#83c8ff", to: "#c9ecff" }, starScale: 0.05, overlay: 0.06, sun: true, moon: false };
       case "noon":
-        return { grad: { from: "#3d7ccf", to: "#a7ddff" }, starScale: 0.04, overlay: 0.14, sun: true, moon: false };
+        return { grad: { from: "#99d6ff", to: "#e8f8ff" }, starScale: 0.04, overlay: 0.06, sun: true, moon: false };
       case "afternoon":
-        return { grad: { from: "#2f6fc4", to: "#99d0ff" }, starScale: 0.05, overlay: 0.12, sun: true, moon: false };
+        return { grad: { from: "#78b7ff", to: "#cde7ff" }, starScale: 0.05, overlay: 0.06, sun: true, moon: false };
       case "dusk":
-        return { grad: { from: "#2b3a6f", to: "#ffa97c" }, starScale: 0.35, overlay: 0.12, sun: true, moon: true };
+        return { grad: { from: "#ffb089", to: "#ffd2a6" }, starScale: 0.28, overlay: 0.10, sun: true, moon: true };
       default:
-        return { grad: { from: "#1b2f6f", to: "#27407f" }, starScale: 1, overlay: 0.22, sun: false, moon: true };
+        return { grad: { from: "#1b2f6f", to: "#27407f" }, starScale: 1, overlay: 0.20, sun: false, moon: true };
     }
   }, [mode]);
 
   if (!canRender) return null;
+  const isDay = mode === "morning" || mode === "noon" || mode === "afternoon";
+  const isGolden = mode === "dawn" || mode === "dusk";
+
   return (
     <div
       id="global-sky-layer"
@@ -62,7 +65,70 @@ export default function GlobalSkyLayer() {
           backgroundGradient={null}
         />
       </div>
+
+      {/* Daytime clouds */}
+      {isDay && (
+        <div className="absolute inset-0">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute"
+              style={{
+                top: `${10 + i * 12}%`,
+                left: `${-20 - (i % 3) * 10}%`,
+                width: `${140 + (i % 3) * 40}px`,
+                height: `${60 + (i % 2) * 20}px`,
+                opacity: 0.35,
+                filter: "blur(0.5px)",
+                animation: `cloud-move ${70 + (i % 4) * 15}s linear ${i * 4}s infinite` as any,
+                background:
+                  "radial-gradient(closest-side, rgba(255,255,255,.9), rgba(255,255,255,0)) 20% 60%/50% 80% no-repeat, " +
+                  "radial-gradient(closest-side, rgba(255,255,255,.85), rgba(255,255,255,0)) 60% 50%/60% 90% no-repeat, " +
+                  "radial-gradient(closest-side, rgba(255,255,255,.8), rgba(255,255,255,0)) 35% 40%/40% 70% no-repeat",
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Daytime airplane */}
+      {isDay && (
+        <svg className="absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <g style={{ opacity: 0.35, animation: "plane 45s linear infinite" as any }}>
+            <path d="M-10 20 L10 22 L30 20 L10 18 Z" fill="#fff" />
+            <rect x="6" y="19.2" width="8" height="1.6" fill="#e6f6ff" />
+          </g>
+        </svg>
+      )}
+
+      {/* Golden hour skyline and whale */}
+      {isGolden && (
+        <div className="absolute inset-0">
+          {/* skyline */}
+          <svg className="absolute left-0 right-0" style={{ bottom: 0, height: "18%" }} viewBox="0 0 100 20" preserveAspectRatio="none">
+            <linearGradient id="cityg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(0,0,0,0.35)" />
+              <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+            </linearGradient>
+            <path d="M0 20 L0 12 L4 12 L4 9 L7 9 L7 14 L12 14 L12 10 L15 10 L15 16 L21 16 L21 7 L24 7 L24 15 L30 15 L30 11 L35 11 L35 18 L42 18 L42 9 L46 9 L46 17 L53 17 L53 12 L58 12 L58 19 L66 19 L66 10 L72 10 L72 16 L80 16 L80 12 L86 12 L86 18 L94 18 L94 13 L100 13 L100 20 Z" fill="url(#cityg)" />
+          </svg>
+          {/* whale */}
+          <svg className="absolute left-1/2" style={{ bottom: "12%", width: 200, height: 80, transform: "translateX(-50%)" }} viewBox="0 0 200 80" aria-hidden>
+            <g style={{ opacity: 0.25, animation: "whale 6s ease-in-out infinite" as any }}>
+              <path d="M10 50 C40 20, 100 20, 150 40 C170 45, 185 50, 190 60 C170 52, 150 55, 130 60 C100 70, 60 70, 30 60 Z" fill="#ffffff" />
+              <circle cx="38" cy="48" r="2" fill="#0a1b3f" />
+            </g>
+          </svg>
+        </div>
+      )}
+
       <div className="absolute inset-0" style={{ backgroundColor: `rgba(0,0,0,${theme.overlay})` }} />
+
+      <style>{`
+        @keyframes cloud-move { from { transform: translateX(0); } to { transform: translateX(140vw); } }
+        @keyframes plane { 0% { transform: translate(-10%, 0) rotate(2deg); } 50% { transform: translate(55%, -2%) rotate(-1deg);} 100% { transform: translate(120%, -4%) rotate(2deg);} }
+        @keyframes whale { 0%, 100% { transform: translateX(-50%) translateY(0);} 50% { transform: translateX(-50%) translateY(-3px);} }
+      `}</style>
     </div>
   );
 }
