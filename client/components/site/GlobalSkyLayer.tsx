@@ -27,15 +27,15 @@ export default function GlobalSkyLayer() {
   const theme = useMemo(() => {
     switch (mode) {
       case "dawn":
-        return { grad: { from: "#f7c897", to: "#ffd9b8" }, starScale: 0.28, overlay: 0.10, sun: true, moon: true };
+        return { grad: { from: "#f6c79d", to: "#ffe1c4" }, starScale: 0.22, overlay: 0.08, sun: false, moon: true };
       case "morning":
-        return { grad: { from: "#83c8ff", to: "#c9ecff" }, starScale: 0.05, overlay: 0.06, sun: true, moon: false };
+        return { grad: { from: "#9ecdf5", to: "#e9f6ff" }, starScale: 0, overlay: 0.03, sun: false, moon: false };
       case "noon":
-        return { grad: { from: "#99d6ff", to: "#e8f8ff" }, starScale: 0.04, overlay: 0.06, sun: true, moon: false };
+        return { grad: { from: "#8fc4f3", to: "#f1f9ff" }, starScale: 0, overlay: 0.02, sun: false, moon: false };
       case "afternoon":
-        return { grad: { from: "#78b7ff", to: "#cde7ff" }, starScale: 0.05, overlay: 0.06, sun: true, moon: false };
+        return { grad: { from: "#7ab6e8", to: "#e6f3ff" }, starScale: 0, overlay: 0.03, sun: false, moon: false };
       case "dusk":
-        return { grad: { from: "#ffb089", to: "#ffd2a6" }, starScale: 0.28, overlay: 0.10, sun: true, moon: true };
+        return { grad: { from: "#ffb089", to: "#ffd2a6" }, starScale: 0.26, overlay: 0.08, sun: false, moon: true };
       default:
         return { grad: { from: "#1b2f6f", to: "#27407f" }, starScale: 1, overlay: 0.20, sun: false, moon: true };
     }
@@ -91,14 +91,27 @@ export default function GlobalSkyLayer() {
         </div>
       )}
 
-      {/* Daytime airplane */}
+      {/* Daytime motion: airplane + birds */}
       {isDay && (
-        <svg className="absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <g style={{ opacity: 0.35, animation: "plane 45s linear infinite" as any }}>
-            <path d="M-10 20 L10 22 L30 20 L10 18 Z" fill="#fff" />
-            <rect x="6" y="19.2" width="8" height="1.6" fill="#e6f6ff" />
-          </g>
-        </svg>
+        <>
+          <svg className="absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <g style={{ opacity: 0.25, animation: "plane 45s linear infinite" as any }}>
+              <path d="M-10 20 L10 22 L30 20 L10 18 Z" fill="#fff" />
+              <rect x="6" y="19.2" width="8" height="1.6" fill="#e6f6ff" />
+            </g>
+          </svg>
+          <svg className="absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <g key={i} style={{ opacity: 0.22, animation: `birds ${38 + (i % 3) * 8}s linear ${i * 5}s infinite` as any }}>
+                <g transform={`translate(-10, ${18 + i * 18}) scale(${0.8 + (i % 3) * 0.25})`}>
+                  <path d="M0 0 C 3 -3, 6 -3, 9 0 M9 0 C 12 -3, 15 -3, 18 0" fill="none" stroke="#ffffff" strokeWidth="0.8" strokeLinecap="round" />
+                  <path d="M22 2 C 25 -1, 28 -1, 31 2 M31 2 C 34 -1, 37 -1, 40 2" fill="none" stroke="#ffffff" strokeWidth="0.7" strokeLinecap="round" />
+                  <path d="M44 -1 C 47 -4, 50 -4, 53 -1 M53 -1 C 56 -4, 59 -4, 62 -1" fill="none" stroke="#ffffff" strokeWidth="0.7" strokeLinecap="round" />
+                </g>
+              </g>
+            ))}
+          </svg>
+        </>
       )}
 
       {/* Golden hour skyline and whale */}
@@ -128,6 +141,7 @@ export default function GlobalSkyLayer() {
         @keyframes cloud-move { from { transform: translateX(0); } to { transform: translateX(140vw); } }
         @keyframes plane { 0% { transform: translate(-10%, 0) rotate(2deg); } 50% { transform: translate(55%, -2%) rotate(-1deg);} 100% { transform: translate(120%, -4%) rotate(2deg);} }
         @keyframes whale { 0%, 100% { transform: translateX(-50%) translateY(0);} 50% { transform: translateX(-50%) translateY(-3px);} }
+        @keyframes birds { from { transform: translate(-10%, 0); } to { transform: translate(110%, 0); } }
       `}</style>
     </div>
   );
