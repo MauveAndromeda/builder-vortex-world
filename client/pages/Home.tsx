@@ -123,12 +123,7 @@ export default function Home() {
           backgroundPosition: "center",
         }}
       />
-      <div className="absolute inset-0">
-        {!window.matchMedia ||
-        !window.matchMedia("(prefers-reduced-motion: reduce)").matches ? (
-          <Star avoidRects={rects} />
-        ) : null}
-      </div>
+      <div className="absolute inset-0" />
       <div className="pointer-events-none absolute top-0 left-0 w-64 h-40">
         <div className="meteor-line" style={{ animationDelay: "1s" }} />
       </div>
