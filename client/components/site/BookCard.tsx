@@ -6,18 +6,24 @@ export default function BookCard({ work }: { work: Work }) {
   const { locale } = useLocale();
   return (
     <article className="group rounded-2xl border overflow-hidden transition hover:shadow-sm">
-      <Link to={localized(`/work/${work.slug}`, locale)} className="block">
-        <div className="aspect-[4/3] overflow-hidden">
-          <img
-            src={work.cover}
-            alt={work.title}
-            loading="lazy"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          />
-        </div>
+      <div className="block">
+        <Link to={localized(`/work/${work.slug}`, locale)} className="block">
+          <div className="aspect-[4/3] overflow-hidden">
+            <img
+              src={work.cover}
+              alt={work.title}
+              loading="lazy"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+          </div>
+        </Link>
         <div className="p-4">
-          <h3 className="font-semibold leading-snug">{work.title}</h3>
+          <h3 className="font-semibold leading-snug">
+            <Link to={localized(`/work/${work.slug}`, locale)} className="hover:underline underline-offset-4">
+              {work.title}
+            </Link>
+          </h3>
           <div className="text-xs text-muted-foreground mt-0.5">{work.author}</div>
           <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{work.excerpt}</p>
           <div className="mt-3 flex items-center justify-between text-sm">
@@ -28,7 +34,7 @@ export default function BookCard({ work }: { work: Work }) {
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </article>
   );
 }
