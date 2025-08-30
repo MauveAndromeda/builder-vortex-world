@@ -16,6 +16,10 @@ export default function WorkDetail() {
   const [owned, setOwned] = useState<boolean>(()=> localStorage.getItem(`owned:${work.slug}`)==="1");
   const email = localStorage.getItem("user:email") || "guest@yclit.org";
   const readerRef = useRef<HTMLDivElement>(null);
+  const [human, setHuman] = useState(false);
+  const [wmOffset, setWmOffset] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [note, setNote] = useState("");
   const [progress, setProgress] = useState(0);
   const [readSet, setReadSet] = useState<Set<number>>(()=> new Set<number>(chapters.filter(c=>localStorage.getItem(`read:${work.slug}:${c.order}`)==='1').map(c=>c.order)));
 
@@ -32,6 +36,7 @@ export default function WorkDetail() {
       const max = Math.max(1, el.scrollHeight - el.clientHeight);
       const p = Math.min(1, el.scrollTop / max);
       setProgress(p);
+      setWmOffset((el.scrollTop||0)%120);
       if (p > 0.8 && chapters[0]) {
         const rk = `read:${work.slug}:${chapters[0].order}`;
         if (localStorage.getItem(rk)!=='1') {
@@ -62,6 +67,11 @@ export default function WorkDetail() {
       <div className="mt-8 grid gap-10 md:grid-cols-12">
         <article id="reader" className="md:col-span-8 max-h-[70vh] overflow-auto rounded-2xl border p-6 bg-card relative no-copy" onCopy={(e)=>e.preventDefault()} onContextMenu={(e)=>e.preventDefault()} ref={readerRef} style={{ fontSize, lineHeight: `${line/10}` }}>
           <h2 className="sr-only">Reader</h2>
+          {!human && (
+            <div className="absolute inset-0 z-20 grid place-items-center bg-background/80">
+              <label className="bg-card rounded-2xl border p-4 text-sm flex items-center gap-2"><input type="checkbox" checked={human} onChange={(e)=>setHuman(e.target.checked)} />我不是机器人 / I am human</label>
+            </div>
+          )}
           <div className="absolute inset-0 -z-0">
             <div className="absolute inset-0" style={{
               backgroundImage: `url(${work.cover})`,
@@ -75,6 +85,7 @@ export default function WorkDetail() {
           <div className="pointer-events-none absolute inset-0 flex items-end justify-end p-3 text-[10px] opacity-40 select-none">
             <span>{email} · {new Date().toLocaleString()}</span>
           </div>
+          <div className="pointer-events-none absolute inset-0 z-0" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent 0, transparent 120px, rgba(255,255,255,0.08) 120px, rgba(255,255,255,0.08) 121px)`, transform: `translateY(${wmOffset*0.2}px)`, mixBlendMode: 'overlay' }} />
           <div className="relative z-10 prose prose-neutral dark:prose-invert max-w-none">
             <p>{chapters[0]?.content || "A sample will appear here."}</p>
             <p>— {work.author}</p>
@@ -112,6 +123,26 @@ export default function WorkDetail() {
           <a href="#reader" className="flex-1 rounded-full bg-foreground text-background px-4 py-2 text-sm text-center">{t("readOnline", locale)}</a>
           <Link to={ctaHref} className="flex-1 rounded-full border px-4 py-2 text-sm text-center">{ctaLabel}</Link>
         </div>
+      </div>
+      <div className="mt-8 max-w-3xl">
+        <form onSubmit={async (e)=>{ e.preventDefault(); try{ await fetch('/api/feedback',{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ slug: work.slug, rating, note }) }); }catch{} }} className="rounded-2xl border p-4 grid gap-3">
+          <div className="text-sm font-medium">读后感 / Feedback</div>
+          <div className="flex items-center gap-2">
+            {[1,2,3,4,5].map(n=> <button key={n} type="button" onClick={()=>setRating(n)} className={`h-8 w-8 rounded-full ${rating>=n? 'bg-amber-400':'bg-muted'}`}>{n}</button>)}
+          </div>
+          <input value={note} onChange={(e)=>setNote(e.target.value)} placeholder="One-line thought" className="rounded-md border px-3 py-2 bg-background text-sm" />
+          <div className="flex gap-2">
+            <button className="rounded-full bg-foreground text-background px-4 py-2 text-sm">Submit</button>
+            <button type="button" onClick={()=>{
+              const c = document.createElement('canvas'); c.width=800; c.height=418; const x=c.getContext('2d')!;
+              x.fillStyle = '#0a1b3f'; x.fillRect(0,0,c.width,c.height);
+              x.fillStyle = '#fff'; x.font = 'bold 28px Inter'; x.fillText(work.title, 28, 60);
+              x.font = '16px Inter'; x.fillText(note || '—', 28, 120);
+              x.font = '12px Inter'; const tag = (email.slice(-2) || '**') + ' ' + new Date().toLocaleString(); x.fillText(tag, 28, 380);
+              const url = c.toDataURL('image/png'); const a=document.createElement('a'); a.href=url; a.download='yclit-card.png'; a.click();
+            }} className="rounded-full border px-4 py-2 text-sm">Save image</button>
+          </div>
+        </form>
       </div>
     </section>
   );
