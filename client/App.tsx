@@ -23,13 +23,15 @@ import Admin from "@/pages/Admin";
 const queryClient = new QueryClient();
 
 import GlobalSkyLayer from "@/components/site/GlobalSkyLayer";
+import { ThemeOverrideProvider } from "@/components/site/ThemeOverrideProvider";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <GlobalSkyLayer />
+      <ThemeOverrideProvider>
+        <Toaster />
+        <Sonner />
+        <GlobalSkyLayer />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Start />} />
@@ -71,7 +73,8 @@ const App = () => (
           <Route path="*" element={<Navigate to="/en-US" replace />} />
           <Route path="admin" element={<Admin />} />
         </Routes>
-      </BrowserRouter>
+        </BrowserRouter>
+      </ThemeOverrideProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
