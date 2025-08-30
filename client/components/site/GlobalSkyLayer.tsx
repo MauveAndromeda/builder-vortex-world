@@ -54,6 +54,9 @@ export default function GlobalSkyLayer() {
 
   const weather = useWeatherTheme();
   const wc = manualWeather || weather.condition;
+
+  // Background music
+  useBackgroundMusic(mode, wc);
   const cloudCount = isDay ? (wc === "overcast" ? 12 : wc === "storm" ? 10 : wc === "cloudy" ? 9 : 6) : 0;
   const cloudOpacity = isDay ? (wc === "overcast" ? 0.5 : wc === "storm" ? 0.55 : wc === "cloudy" ? 0.42 : 0.35) : 0.35;
   const tint = (() => {
