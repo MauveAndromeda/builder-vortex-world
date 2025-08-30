@@ -53,7 +53,7 @@ export function getChaptersByWork(slug: string) {
 
 export const settings: Settings = {
   heroTextEn: "You found YCity’s little bookroom",
-  heroTextZh: "你找到了 YCity 的小书房",
+  heroTextZh: "恭喜你发现了伊城的小书屋",
   nav: [],
   footer: [],
 };
