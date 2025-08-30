@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import GlobalSkyLayer from "@/components/site/GlobalSkyLayer";
 
 function useAdminToken() {
   const [token, setToken] = useState<string | null>(null);
