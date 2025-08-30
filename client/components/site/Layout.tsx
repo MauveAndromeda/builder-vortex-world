@@ -116,6 +116,8 @@ export function Newsletter() {
 
 export function Footer() {
   const { locale } = useLocale();
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(()=>{ try{ const u = JSON.parse(localStorage.getItem('auth:user')||'null'); setIsAdmin(!!u && u.role==='ADMIN'); }catch{} },[]);
   return (
     <footer className="border-t border-border mt-16">
       <div className="container mx-auto py-10 grid gap-8 md:grid-cols-2 items-center">
@@ -126,6 +128,7 @@ export function Footer() {
             <a className="opacity-80 hover:opacity-100 transition" href="#newsletter">Newsletter</a>
             <Link className="opacity-80 hover:opacity-100 transition" to={localized("/privacy", locale)}>{t("privacy", locale)}</Link>
             <Link className="opacity-80 hover:opacity-100 transition" to={localized("/terms", locale)}>{t("terms", locale)}</Link>
+            {isAdmin && <Link className="opacity-80 hover:opacity-100 transition" to={localized("/me", locale)}>Admin</Link>}
           </div>
         </div>
       </div>
