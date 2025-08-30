@@ -2,6 +2,8 @@ import { useLocale, t, localized } from "@/lib/i18n";
 import SEO from "@/components/site/SEO";
 import { works, getChaptersByWork } from "@/data/content";
 import { useEffect, useMemo, useState } from "react";
+import { useLocale, t } from "@/lib/i18n";
+import { toast } from "sonner";
 import { useParams, useLocation } from "react-router-dom";
 
 async function getPublishableKey() {
@@ -30,6 +32,7 @@ export default function Checkout() {
   const [pk, setPk] = useState<string>("");
   const [stripe, setStripe] = useState<any>(null);
   const [elements, setElements] = useState<any>(null);
+  const [human, setHuman] = useState(false);
 
   const item = useMemo(() => {
     if (mode === "buy-all") return { label: "Buy All", amount: 100000 }; // $1000
@@ -82,7 +85,16 @@ export default function Checkout() {
       confirmParams: { return_url: window.location.origin + "/" + locale + "/account/purchases" },
       redirect: "if_required",
     });
-    if (error) setStatus(error.message || "Payment failed"); else setStatus("Paid or redirected");
+    if (error) setStatus(error.message || "Payment failed"); else {
+      setStatus("Paid or redirected");
+      try{
+        const ach: string[] = [];
+        if (mode==='donation') ach.push('first_tip');
+        if (mode==='buy-all') ach.push('first_buy_all');
+        if (ach.length){ await fetch('/api/achievements', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ achievements: ach }) }); }
+        ach.forEach(a=> toast(`Achievement unlocked: ${a.replace('_',' ')}`));
+      }catch{}
+    }
   }
 
   return (
@@ -99,8 +111,11 @@ export default function Checkout() {
           {!pk && <div className="mt-2 text-xs text-amber-600">Stripe publishable key not set. Running in demo mode.</div>}
           {clientSecret ? (
             <form onSubmit={pay} className="mt-4 grid gap-4">
-              <div id="payment-element"></div>
-              <button className="rounded-full bg-foreground text-background px-5 py-2 text-sm">Pay</button>
+              <div className="rounded-md border p-3">
+                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={human} onChange={(e)=>setHuman(e.target.checked)} />I am human</label>
+                <div id="payment-element" className="mt-3"></div>
+              </div>
+              <button disabled={!human} className="rounded-full bg-foreground text-background px-5 py-2 text-sm disabled:opacity-50">Pay</button>
             </form>
           ) : (
             <div className="mt-6 text-sm text-muted-foreground">Creating payment intent…</div>
