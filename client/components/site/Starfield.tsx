@@ -58,7 +58,7 @@ export default function Starfield({
     const layerFront = makeStars(Math.floor(total * 0.25), 0.5, 1.6);
 
     // Celestial objects (galaxies, clusters, planets)
-    type Galaxy = { x: number; y: number; rx: number; ry: number; rot: number; tw: number };
+    type Galaxy = { x: number; y: number; rx: number; ry: number; rot: number; tw: number; name: string };
     type Cluster = { x: number; y: number; r: number; tw: number };
     type Planet = { x: number; y: number; r: number; color: string; ring: boolean };
 
