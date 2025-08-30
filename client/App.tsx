@@ -22,11 +22,14 @@ import Admin from "@/pages/Admin";
 
 const queryClient = new QueryClient();
 
+import GlobalSkyLayer from "@/components/site/GlobalSkyLayer";
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <GlobalSkyLayer />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Start />} />
