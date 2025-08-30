@@ -16,6 +16,8 @@ export default function WorkDetail() {
   const [owned, setOwned] = useState<boolean>(()=> localStorage.getItem(`owned:${work.slug}`)==="1");
   const email = localStorage.getItem("user:email") || "guest@yclit.org";
   const readerRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [readSet, setReadSet] = useState<Set<number>>(()=> new Set<number>(chapters.filter(c=>localStorage.getItem(`read:${work.slug}:${c.order}`)==='1').map(c=>c.order)));
 
   useEffect(()=>{ localStorage.setItem("reader:font", String(fontSize)); },[fontSize]);
   useEffect(()=>{ localStorage.setItem("reader:line", String(line)); },[line]);
@@ -23,7 +25,21 @@ export default function WorkDetail() {
     const key = `scroll:${work.slug}`;
     const saved = Number(localStorage.getItem(key)||"0");
     if (readerRef.current) readerRef.current.scrollTop = saved;
-    const onScroll = () => { if (readerRef.current) localStorage.setItem(key, String(readerRef.current.scrollTop)); };
+    const onScroll = () => {
+      const el = readerRef.current;
+      if (!el) return;
+      localStorage.setItem(key, String(el.scrollTop));
+      const max = Math.max(1, el.scrollHeight - el.clientHeight);
+      const p = Math.min(1, el.scrollTop / max);
+      setProgress(p);
+      if (p > 0.8 && chapters[0]) {
+        const rk = `read:${work.slug}:${chapters[0].order}`;
+        if (localStorage.getItem(rk)!=='1') {
+          localStorage.setItem(rk, '1');
+          setReadSet(prev=> new Set<number>([...Array.from(prev), chapters[0]!.order]));
+        }
+      }
+    };
     readerRef.current?.addEventListener("scroll", onScroll);
     return () => readerRef.current?.removeEventListener("scroll", onScroll);
   },[work.slug]);
@@ -33,6 +49,9 @@ export default function WorkDetail() {
 
   return (
     <section className="py-10">
+      <div className="fixed left-0 right-0 top-0 h-0.5 z-50 bg-transparent">
+        <div className="h-full bg-gradient-to-r from-sky-300 to-indigo-400" style={{ width: `${Math.round(progress*100)}%` }} />
+      </div>
       <SEO title={`${work.title} — ${t("brand", locale)}`} description={work.excerpt} />
       <header className="max-w-3xl">
         <h1 className="text-3xl font-semibold tracking-tight">{work.title}</h1>
@@ -67,7 +86,7 @@ export default function WorkDetail() {
             <ol className="space-y-2 text-sm">
               {chapters.map((c)=> (
                 <li key={c.order} className="flex items-center justify-between">
-                  <span className="truncate">{c.order}. {c.title}</span>
+                  <span className="truncate flex items-center gap-2">{readSet.has(c.order) && <span aria-label="read" title="Read" className="inline-block h-3.5 w-3.5 rounded-full bg-emerald-500" />}<span>{c.order}. {c.title}</span></span>
                   {c.price ? <span className="opacity-70">${c.price.toFixed(2)}</span> : <span className="opacity-50">Free</span>}
                 </li>
               ))}
