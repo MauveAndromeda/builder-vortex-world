@@ -9,6 +9,7 @@ import {
   handleStripeWebhook,
   handlePublicKey,
 } from "./routes/stripe";
+import { attachAdmin } from "./routes/admin";
 
 export function createServer() {
   const app = express();
@@ -28,6 +29,9 @@ export function createServer() {
   );
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // Admin API
+  attachAdmin(app);
 
   // Example API routes
   app.get("/api/ping", (_req, res) => {

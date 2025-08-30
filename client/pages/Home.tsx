@@ -73,7 +73,35 @@ export default function Home() {
         ),
     [],
   );
-  const featured = worksSorted.slice(0, 3);
+  const [adminData, setAdminData] = useState<{ works: typeof allWorks; featured: string[] }>({ works: [], featured: [] });
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await fetch("/api/admin/home-works");
+        if (r.ok) setAdminData(await r.json());
+      } catch {}
+    })();
+  }, []);
+
+  const merged = useMemo(() => {
+    const bySlug = new Map(allWorks.map((w) => [w.slug, w]));
+    const extras = (adminData.works || []).filter((w: any) => !bySlug.has(w.slug));
+    return [...allWorks, ...extras].filter((w) => w.published);
+  }, [adminData.works]);
+
+  const worksSorted = useMemo(
+    () => [...merged].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+    [merged],
+  );
+
+  const featured = useMemo(() => {
+    const adminFeatured = (adminData.featured || [])
+      .map((slug) => worksSorted.find((w) => w.slug === slug))
+      .filter(Boolean) as typeof allWorks;
+    const rest = worksSorted.filter((w) => !adminData.featured?.includes(w.slug));
+    return [...adminFeatured, ...rest].slice(0, 3);
+  }, [worksSorted, adminData.featured]);
+
   const others = (
     onlyFavs ? worksSorted.filter((w) => favs.has(w.slug)) : worksSorted
   ).slice(3);

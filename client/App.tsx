@@ -18,6 +18,7 @@ import Splash from "@/pages/Splash";
 import Start from "@/pages/Start";
 import Placeholder from "@/pages/Placeholder";
 import NotFound from "@/pages/NotFound";
+import Admin from "@/pages/Admin";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Route>
           <Route path="*" element={<Navigate to="/en-US" replace />} />
+          <Route path="admin" element={<Admin />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
