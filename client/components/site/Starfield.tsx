@@ -382,10 +382,10 @@ export default function Starfield({
       ctx.fillRect(0, 0, w, h);
       ctx.globalCompositeOperation = "source-over";
 
-      // meteors timing
+      // meteors timing (reduced)
       if (t >= nextMeteorAt) {
-        const maxConcurrent = mode === "night" ? 6 : mode === "dusk" || mode === "dawn" ? 4 : 2;
-        const burst = Math.floor(rand(1, 3));
+        const maxConcurrent = mode === "night" ? 3 : mode === "dusk" || mode === "dawn" ? 2 : 1;
+        const burst = 1;
         for (let i = 0; i < burst; i++) if (meteors.length < maxConcurrent) spawnMeteor();
         scheduleMeteor(t);
       }
