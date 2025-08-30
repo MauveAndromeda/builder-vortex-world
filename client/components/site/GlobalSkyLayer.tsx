@@ -21,6 +21,7 @@ export default function GlobalSkyLayer() {
       <div className="absolute inset-0">
         <Starfield className="block w-full h-full" />
       </div>
+      <div className="absolute inset-0 bg-black/30" />
     </div>
   );
 }
