@@ -1,7 +1,24 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type ManualMode = "dawn" | "morning" | "noon" | "afternoon" | "dusk" | "night" | null;
-export type ManualWeather = "sunny" | "cloudy" | "overcast" | "rain" | "snow" | "hail" | "windy" | "storm" | "blizzard" | null;
+export type ManualMode =
+  | "dawn"
+  | "morning"
+  | "noon"
+  | "afternoon"
+  | "dusk"
+  | "night"
+  | null;
+export type ManualWeather =
+  | "sunny"
+  | "cloudy"
+  | "overcast"
+  | "rain"
+  | "snow"
+  | "hail"
+  | "windy"
+  | "storm"
+  | "blizzard"
+  | null;
 
 export type ThemeOverrideState = {
   manualMode: ManualMode;
@@ -24,7 +41,9 @@ export const ThemeOverrideContext = createContext<ThemeOverrideState>({
 export function useThemeOverride(): ThemeOverrideState {
   const context = useContext(ThemeOverrideContext);
   if (!context) {
-    throw new Error("useThemeOverride must be used within ThemeOverrideProvider");
+    throw new Error(
+      "useThemeOverride must be used within ThemeOverrideProvider",
+    );
   }
   return context;
 }
@@ -40,7 +59,9 @@ export function useThemeOverrideState(): ThemeOverrideState {
 
   const [manualWeather, setManualWeather] = useState<ManualWeather>(() => {
     try {
-      return (localStorage.getItem("theme:manualWeather") as ManualWeather) || null;
+      return (
+        (localStorage.getItem("theme:manualWeather") as ManualWeather) || null
+      );
     } catch {
       return null;
     }

@@ -1,5 +1,8 @@
 import { ReactNode } from "react";
-import { ThemeOverrideContext, useThemeOverrideState } from "@/hooks/use-theme-override";
+import {
+  ThemeOverrideContext,
+  useThemeOverrideState,
+} from "@/hooks/use-theme-override";
 
 export function ThemeOverrideProvider({ children }: { children: ReactNode }) {
   const state = useThemeOverrideState();

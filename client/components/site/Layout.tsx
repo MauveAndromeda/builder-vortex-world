@@ -321,7 +321,10 @@ export function ChatWidget() {
     if (text.includes("管理员")) {
       nav("/admin");
       setTimeout(() => {
-        setMessages((m) => [...m, { role: "assistant", content: "正在打开管理员界面…" }]);
+        setMessages((m) => [
+          ...m,
+          { role: "assistant", content: "正在打开管理员界面…" },
+        ]);
       }, 150);
       return;
     }

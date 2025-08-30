@@ -1,5 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { useThemeOverride, ManualMode, ManualWeather } from "@/hooks/use-theme-override";
+import {
+  useThemeOverride,
+  ManualMode,
+  ManualWeather,
+} from "@/hooks/use-theme-override";
 
 export function ThemeControls() {
   const {
@@ -21,7 +25,10 @@ export function ThemeControls() {
       if (modeRef.current && !modeRef.current.contains(e.target as Node)) {
         setModeOpen(false);
       }
-      if (weatherRef.current && !weatherRef.current.contains(e.target as Node)) {
+      if (
+        weatherRef.current &&
+        !weatherRef.current.contains(e.target as Node)
+      ) {
         setWeatherOpen(false);
       }
     }
@@ -39,7 +46,11 @@ export function ThemeControls() {
     { value: "night", label: "夜晚", icon: "🌙" },
   ];
 
-  const weatherOptions: { value: ManualWeather; label: string; icon: string }[] = [
+  const weatherOptions: {
+    value: ManualWeather;
+    label: string;
+    icon: string;
+  }[] = [
     { value: null, label: "自动", icon: "⚡" },
     { value: "sunny", label: "晴天", icon: "☀️" },
     { value: "cloudy", label: "多云", icon: "⛅" },
@@ -52,8 +63,10 @@ export function ThemeControls() {
     { value: "blizzard", label: "暴风雪", icon: "🌨️" },
   ];
 
-  const currentMode = modeOptions.find(o => o.value === manualMode) || modeOptions[0];
-  const currentWeather = weatherOptions.find(o => o.value === manualWeather) || weatherOptions[0];
+  const currentMode =
+    modeOptions.find((o) => o.value === manualMode) || modeOptions[0];
+  const currentWeather =
+    weatherOptions.find((o) => o.value === manualWeather) || weatherOptions[0];
 
   return (
     <div className="flex items-center gap-2">
@@ -66,8 +79,18 @@ export function ThemeControls() {
         >
           <span>{currentMode.icon}</span>
           <span className="hidden sm:inline">{currentMode.label}</span>
-          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <svg
+            className="w-3 h-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </button>
         {modeOpen && (
@@ -101,8 +124,18 @@ export function ThemeControls() {
         >
           <span>{currentWeather.icon}</span>
           <span className="hidden sm:inline">{currentWeather.label}</span>
-          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <svg
+            className="w-3 h-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </button>
         {weatherOpen && (
@@ -131,13 +164,17 @@ export function ThemeControls() {
       <button
         onClick={() => setMusicEnabled(!musicEnabled)}
         className={`flex items-center gap-1 px-2 py-1 text-xs rounded-full transition-colors ${
-          musicEnabled ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+          musicEnabled
+            ? "bg-primary text-primary-foreground"
+            : "bg-muted hover:bg-muted/80"
         }`}
         aria-label="背景音乐"
         title={musicEnabled ? "关闭背景音乐" : "开启背景音乐"}
       >
         <span>{musicEnabled ? "🎵" : "🔇"}</span>
-        <span className="hidden sm:inline">{musicEnabled ? "音乐" : "静音"}</span>
+        <span className="hidden sm:inline">
+          {musicEnabled ? "音乐" : "静音"}
+        </span>
       </button>
     </div>
   );

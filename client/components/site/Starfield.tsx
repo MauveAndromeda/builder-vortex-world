@@ -58,9 +58,23 @@ export default function Starfield({
     const layerFront = makeStars(Math.floor(total * 0.25), 0.5, 1.6);
 
     // Celestial objects (galaxies, clusters, planets)
-    type Galaxy = { x: number; y: number; rx: number; ry: number; rot: number; tw: number; name: string };
+    type Galaxy = {
+      x: number;
+      y: number;
+      rx: number;
+      ry: number;
+      rot: number;
+      tw: number;
+      name: string;
+    };
     type Cluster = { x: number; y: number; r: number; tw: number };
-    type Planet = { x: number; y: number; r: number; color: string; ring: boolean };
+    type Planet = {
+      x: number;
+      y: number;
+      r: number;
+      color: string;
+      ring: boolean;
+    };
 
     let galaxies: Galaxy[] = [];
     let clusters: Cluster[] = [];
@@ -78,9 +92,13 @@ export default function Starfield({
 
     function regenCelestial() {
       const epoch = Math.floor(Date.now() / (1000 * 60 * 30));
-      const rnd = seedRandom(epoch + (mode === "night" ? 100 : mode === "dusk" ? 60 : 20));
-      const gCount = mode === "night" ? 5 : mode === "dusk" || mode === "dawn" ? 3 : 1;
-      const cCount = mode === "night" ? 14 : mode === "dusk" || mode === "dawn" ? 9 : 4;
+      const rnd = seedRandom(
+        epoch + (mode === "night" ? 100 : mode === "dusk" ? 60 : 20),
+      );
+      const gCount =
+        mode === "night" ? 5 : mode === "dusk" || mode === "dawn" ? 3 : 1;
+      const cCount =
+        mode === "night" ? 14 : mode === "dusk" || mode === "dawn" ? 9 : 4;
       const pCount = mode === "night" ? 2 : mode === "dusk" ? 1 : 0;
       const catalog = [
         "Andromeda (M31)",
@@ -98,7 +116,9 @@ export default function Starfield({
         ry: 12 + rnd() * 22,
         rot: rnd() * Math.PI,
         tw: rnd() * Math.PI * 2,
-        name: catalog[(i + Math.floor(rnd() * catalog.length)) % catalog.length],
+        name: catalog[
+          (i + Math.floor(rnd() * catalog.length)) % catalog.length
+        ],
       }));
       clusters = Array.from({ length: cCount }, () => ({
         x: rnd() * w,
@@ -126,7 +146,13 @@ export default function Starfield({
 
     // Meteors
     let nextMeteorAt = performance.now() + rand(2500, 6000);
-    type Meteor = { x: number; y: number; vx: number; vy: number; life: number };
+    type Meteor = {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      life: number;
+    };
     let meteors: Meteor[] = [];
 
     function rand(min: number, max: number) {
@@ -166,7 +192,12 @@ export default function Starfield({
     }
 
     function scheduleMeteor(now: number) {
-      const base = mode === "night" ? 6500 : mode === "dusk" || mode === "dawn" ? 9000 : 12000;
+      const base =
+        mode === "night"
+          ? 6500
+          : mode === "dusk" || mode === "dawn"
+            ? 9000
+            : 12000;
       nextMeteorAt = now + rand(base, base + 4000);
     }
 
@@ -255,7 +286,14 @@ export default function Starfield({
         ctx.stroke();
         ctx.restore();
       }
-      const grad = ctx.createRadialGradient(p.x - p.r * 0.4, p.y - p.r * 0.6, 0, p.x, p.y, p.r * 1.2);
+      const grad = ctx.createRadialGradient(
+        p.x - p.r * 0.4,
+        p.y - p.r * 0.6,
+        0,
+        p.x,
+        p.y,
+        p.r * 1.2,
+      );
       grad.addColorStop(0, p.color + "cc");
       grad.addColorStop(1, "rgba(255,255,255,0)");
       ctx.fillStyle = grad;
@@ -290,11 +328,19 @@ export default function Starfield({
       const mx = w * 0.85,
         my = h * 0.15,
         mr = 28;
-      const color = mode === "dawn" ? "#ffd7a6" : mode === "dusk" ? "#ffb46b" : "#ffe58a";
+      const color =
+        mode === "dawn" ? "#ffd7a6" : mode === "dusk" ? "#ffb46b" : "#ffe58a";
       const halo = mode === "noon" ? 0.28 : 0.22;
       // halo
       ctx.globalCompositeOperation = "lighter";
-      const rg = ctx.createRadialGradient(mx, my, 0, mx, my, mr * (1 + halo * 2.2));
+      const rg = ctx.createRadialGradient(
+        mx,
+        my,
+        0,
+        mx,
+        my,
+        mr * (1 + halo * 2.2),
+      );
       rg.addColorStop(0, color + "cc");
       rg.addColorStop(1, "rgba(255,200,120,0)");
       ctx.fillStyle = rg;
@@ -346,7 +392,7 @@ export default function Starfield({
           lowFps = true;
         }
       }
-        // background (optional)
+      // background (optional)
       ctx.clearRect(0, 0, w, h);
       if (backgroundGradient !== null) {
         const g = ctx.createLinearGradient(0, 0, 0, h);
@@ -359,9 +405,13 @@ export default function Starfield({
       }
 
       // stars intensity by mode
-      const intensity = Math.max(0, Math.min(1, starScale)) * (
-        mode === "night" ? 1 : mode === "dusk" || mode === "dawn" ? 0.35 : 0.08
-      );
+      const intensity =
+        Math.max(0, Math.min(1, starScale)) *
+        (mode === "night"
+          ? 1
+          : mode === "dusk" || mode === "dawn"
+            ? 0.35
+            : 0.08);
 
       drawLayer(layerBack, t, 0.004 * (1 + intensity * 0.2), intensity);
       drawLayer(layerMid, t, 0.007 * (1 + intensity * 0.2), intensity);
@@ -370,11 +420,12 @@ export default function Starfield({
       if (mode === "night" || mode === "dusk" || mode === "dawn") {
         galaxies.forEach((g) => drawGalaxy(g, t));
         clusters.forEach((c) => drawCluster(c, t));
-        if (mode === "night" || mode === "dusk") planets.forEach((p) => drawPlanet(p));
+        if (mode === "night" || mode === "dusk")
+          planets.forEach((p) => drawPlanet(p));
       }
 
       if (showMoon && (mode === "night" || mode === "dusk")) drawMoon();
-      if (showSun && (mode !== "night")) drawSun();
+      if (showSun && mode !== "night") drawSun();
 
       // lantern glow
       ctx.globalCompositeOperation = "lighter";
@@ -394,9 +445,11 @@ export default function Starfield({
 
       // meteors timing (reduced)
       if (t >= nextMeteorAt) {
-        const maxConcurrent = mode === "night" ? 3 : mode === "dusk" || mode === "dawn" ? 2 : 1;
+        const maxConcurrent =
+          mode === "night" ? 3 : mode === "dusk" || mode === "dawn" ? 2 : 1;
         const burst = 1;
-        for (let i = 0; i < burst; i++) if (meteors.length < maxConcurrent) spawnMeteor();
+        for (let i = 0; i < burst; i++)
+          if (meteors.length < maxConcurrent) spawnMeteor();
         scheduleMeteor(t);
       }
       drawMeteors();
@@ -419,7 +472,9 @@ export default function Starfield({
       window.removeEventListener("scroll", onScroll as any);
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("pointermove", onPointer as any);
-      try { clearInterval(regenId); } catch {}
+      try {
+        clearInterval(regenId);
+      } catch {}
     };
   }, [reduce, avoidRects, mode]);
 

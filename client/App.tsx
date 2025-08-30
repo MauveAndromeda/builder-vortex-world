@@ -32,47 +32,47 @@ const App = () => (
         <Toaster />
         <Sonner />
         <GlobalSkyLayer />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Start />} />
-          <Route path="splash" element={<Splash />} />
-          <Route path=":locale" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="works" element={<Works />} />
-            <Route path="work/:slug" element={<WorkDetail />} />
-            <Route path="about" element={<About />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="privacy" element={<Placeholder title="Privacy" />} />
-            <Route path="terms" element={<Placeholder title="Terms" />} />
-            <Route path="checkout">
-              <Route
-                path="buy-all"
-                element={<CheckoutWrapper mode="buy-all" />}
-              />
-              <Route
-                path="work/:slug"
-                element={<CheckoutWrapper mode="work" />}
-              />
-              <Route
-                path="chapter/:slug/:order"
-                element={<CheckoutWrapper mode="chapter" />}
-              />
-              <Route
-                path="donation"
-                element={<CheckoutWrapper mode="donation" />}
-              />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Start />} />
+            <Route path="splash" element={<Splash />} />
+            <Route path=":locale" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="works" element={<Works />} />
+              <Route path="work/:slug" element={<WorkDetail />} />
+              <Route path="about" element={<About />} />
+              <Route path="contact" element={<Contact />} />
+              <Route path="privacy" element={<Placeholder title="Privacy" />} />
+              <Route path="terms" element={<Placeholder title="Terms" />} />
+              <Route path="checkout">
+                <Route
+                  path="buy-all"
+                  element={<CheckoutWrapper mode="buy-all" />}
+                />
+                <Route
+                  path="work/:slug"
+                  element={<CheckoutWrapper mode="work" />}
+                />
+                <Route
+                  path="chapter/:slug/:order"
+                  element={<CheckoutWrapper mode="chapter" />}
+                />
+                <Route
+                  path="donation"
+                  element={<CheckoutWrapper mode="donation" />}
+                />
+              </Route>
+              <Route path="account" element={<AccountLayout />}>
+                <Route path="sign-in" element={<SignIn />} />
+                <Route path="register" element={<Register />} />
+                <Route path="purchases" element={<Purchases />} />
+                <Route path="profile" element={<Profile />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
             </Route>
-            <Route path="account" element={<AccountLayout />}>
-              <Route path="sign-in" element={<SignIn />} />
-              <Route path="register" element={<Register />} />
-              <Route path="purchases" element={<Purchases />} />
-              <Route path="profile" element={<Profile />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Route>
-          <Route path="*" element={<Navigate to="/en-US" replace />} />
-          <Route path="admin" element={<Admin />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/en-US" replace />} />
+            <Route path="admin" element={<Admin />} />
+          </Routes>
         </BrowserRouter>
       </ThemeOverrideProvider>
     </TooltipProvider>
