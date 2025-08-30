@@ -229,19 +229,6 @@ export default function Starfield({
       ctx.fill();
       ctx.restore();
       ctx.globalAlpha = 1;
-      // label
-      ctx.save();
-      ctx.font = "12px system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-      ctx.fillStyle = "rgba(255,255,255,0.9)";
-      ctx.strokeStyle = "rgba(10,27,63,0.6)";
-      ctx.lineWidth = 3;
-      const lx = g.x;
-      const ly = g.y + g.ry + 8;
-      (ctx as any).strokeText?.(g.name, lx, ly);
-      ctx.fillText(g.name, lx, ly);
-      ctx.restore();
     }
 
     function drawCluster(c: Cluster, t: number) {
