@@ -1,6 +1,6 @@
 import SEO from "@/components/site/SEO";
 import { t, useLocale, localized } from "@/lib/i18n";
-import { settings } from "@/data/content";
+import { settings, works } from "@/data/content";
 import { Link } from "react-router-dom";
 import Star from "@/components/site/Starfield";
 import { useEffect, useRef, useState } from "react";
@@ -44,6 +44,12 @@ export default function Home() {
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a1b3f] to-[#152a5c]" />
       <div className="absolute inset-0" style={{ backgroundImage: "url(https://cdn.builder.io/api/v1/image/assets%2F2ddbc13a7719400ea5b757207fa45062%2F77a486a89e634e55bb83c9295b42763b?format=webp&width=800)", opacity: 0.25, backgroundSize: 'cover', backgroundPosition: 'center' }} />
       <div className="absolute inset-0" />
+      <div className="pointer-events-none absolute top-0 left-0 w-64 h-40">
+        <div className="meteor-line" style={{ animationDelay: '1s' }} />
+      </div>
+      <div className="pointer-events-none absolute top-0 right-0 w-64 h-40">
+        <div className="meteor-line meteor-right" style={{ animationDelay: '2.5s' }} />
+      </div>
       <div className="relative mx-auto grid gap-10 md:grid-cols-12 items-center">
         <div className="md:col-span-7">
           <div ref={heroRef} className="bg-black/25 text-white rounded-xl p-4 inline-block" data-reveal>
@@ -79,6 +85,22 @@ export default function Home() {
             <p className="text-sm opacity-80 mt-1">Gentle motion, clear type, responsive images. WCAG AA.</p>
           </div>
         ))}
+      </div>
+
+      <div className="relative mt-16">
+        <h2 className="sr-only">Authors</h2>
+        <div className="grid gap-4 md:grid-cols-3">
+          {Array.from(new Set(works.map(w=>w.author))).map((name)=>{
+            const count = works.filter(w=>w.author===name).length;
+            return (
+              <Link key={name} to={localized(`/works?q=${encodeURIComponent(name)}`, locale)} className="rounded-2xl border border-white/10 bg-white/5 p-5 text-white ui-float">
+                <div className="text-sm opacity-80">作者</div>
+                <div className="mt-1 text-lg font-semibold">{name}</div>
+                <div className="text-sm opacity-80 mt-1">作品 {count} 篇</div>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
