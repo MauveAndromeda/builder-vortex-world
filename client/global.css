@@ -115,37 +115,167 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.04) 0, rgba(0,0,0,0.04) 2px, transparent 2px, transparent 40px);
-    color: rgba(0,0,0,0.07);
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.04) 0,
+      rgba(0, 0, 0, 0.04) 2px,
+      transparent 2px,
+      transparent 40px
+    );
+    color: rgba(0, 0, 0, 0.07);
     font-size: 14px;
     letter-spacing: 2px;
     display: block;
     mix-blend-mode: multiply;
   }
   .dark .watermark::after {
-    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.06) 2px, transparent 2px, transparent 40px);
-    color: rgba(255,255,255,0.08);
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.06) 0,
+      rgba(255, 255, 255, 0.06) 2px,
+      transparent 2px,
+      transparent 40px
+    );
+    color: rgba(255, 255, 255, 0.08);
     mix-blend-mode: screen;
   }
-  .ui-float { transition: transform 160ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease; will-change: transform; }
-  .ui-float:hover { transform: translateY(-2px) scale(1.01); box-shadow: 0 8px 24px rgba(30, 58, 138, 0.28); }
-  .ui-glow:hover { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.18)); }
-  [data-reveal] { opacity: 0; transform: translateY(4px); transition: opacity 260ms ease, transform 260ms cubic-bezier(.2,.8,.2,1); }
-  .reveal-in { opacity: 1 !important; transform: translateY(0) !important; }
+  .ui-float {
+    transition:
+      transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 220ms ease;
+    will-change: transform;
+  }
+  .ui-float:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 8px 24px rgba(30, 58, 138, 0.28);
+  }
+  .ui-glow:hover {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.18));
+  }
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 260ms ease,
+      transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .reveal-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
 
-  .meteor-line{ position:absolute; top:16px; left:-100px; width:140px; height:2px; background: linear-gradient(90deg, rgba(255,255,255,.95), rgba(255,255,255,0)); transform: rotate(25deg); filter: drop-shadow(0 0 6px rgba(255,255,255,.5)); animation: meteor-left 12s linear infinite; opacity:.85 }
-  .meteor-right{ left: auto; right:-100px; transform: rotate(-25deg); background: linear-gradient(270deg, rgba(255,255,255,.95), rgba(255,255,255,0)); animation: meteor-right 12s linear infinite }
-  @keyframes meteor-left{ 0%{ transform: translate3d(0,0,0) rotate(25deg); opacity:0 } 8%{ opacity:1 } 100%{ transform: translate3d(260px,100px,0) rotate(25deg); opacity:0 } }
-  @keyframes meteor-right{ 0%{ transform: translate3d(0,0,0) rotate(-25deg); opacity:0 } 8%{ opacity:1 } 100%{ transform: translate3d(-260px,100px,0) rotate(-25deg); opacity:0 } }
-  @media (prefers-reduced-motion: reduce){ .meteor-line, .meteor-right{ animation: none !important } }
+  .meteor-line {
+    position: absolute;
+    top: 16px;
+    left: -100px;
+    width: 140px;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.95),
+      rgba(255, 255, 255, 0)
+    );
+    transform: rotate(25deg);
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+    animation: meteor-left 12s linear infinite;
+    opacity: 0.85;
+  }
+  .meteor-right {
+    left: auto;
+    right: -100px;
+    transform: rotate(-25deg);
+    background: linear-gradient(
+      270deg,
+      rgba(255, 255, 255, 0.95),
+      rgba(255, 255, 255, 0)
+    );
+    animation: meteor-right 12s linear infinite;
+  }
+  @keyframes meteor-left {
+    0% {
+      transform: translate3d(0, 0, 0) rotate(25deg);
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(260px, 100px, 0) rotate(25deg);
+      opacity: 0;
+    }
+  }
+  @keyframes meteor-right {
+    0% {
+      transform: translate3d(0, 0, 0) rotate(-25deg);
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(-260px, 100px, 0) rotate(-25deg);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .meteor-line,
+    .meteor-right {
+      animation: none !important;
+    }
+  }
 
-  .shine{ position: relative; overflow: hidden; }
-  .shine::after{ content:""; position:absolute; inset: -100%; background: linear-gradient(60deg, transparent, rgba(255,255,255,.18), transparent); transform: translateX(-100%); }
-  .shine:hover::after{ animation: shine-move 900ms ease; }
-  @keyframes shine-move{ from{ transform: translateX(-100%);} to{ transform: translateX(100%);} }
+  .shine {
+    position: relative;
+    overflow: hidden;
+  }
+  .shine::after {
+    content: "";
+    position: absolute;
+    inset: -100%;
+    background: linear-gradient(
+      60deg,
+      transparent,
+      rgba(255, 255, 255, 0.18),
+      transparent
+    );
+    transform: translateX(-100%);
+  }
+  .shine:hover::after {
+    animation: shine-move 900ms ease;
+  }
+  @keyframes shine-move {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
 
-  .bot{ animation: bot-bob 3s ease-in-out infinite; }
-  .bot-eye{ transform-origin: center; animation: bot-blink 5s infinite; }
-  @keyframes bot-bob{ 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-2px);} }
-  @keyframes bot-blink{ 0%,92%,100%{ transform: scaleY(1);} 95%{ transform: scaleY(0.1);} }
+  .bot {
+    animation: bot-bob 3s ease-in-out infinite;
+  }
+  .bot-eye {
+    transform-origin: center;
+    animation: bot-blink 5s infinite;
+  }
+  @keyframes bot-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+  @keyframes bot-blink {
+    0%,
+    92%,
+    100% {
+      transform: scaleY(1);
+    }
+    95% {
+      transform: scaleY(0.1);
+    }
+  }
 }

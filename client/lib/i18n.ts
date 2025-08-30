@@ -4,12 +4,17 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 export type Locale = "en-US" | "zh-CN";
 export const SUPPORTED_LOCALES: Locale[] = ["en-US", "zh-CN"];
 
-export function useLocale(): { locale: Locale; setLocale: (l: Locale) => void } {
+export function useLocale(): {
+  locale: Locale;
+  setLocale: (l: Locale) => void;
+} {
   const params = useParams();
   const nav = useNavigate();
   const loc = useLocation();
   const raw = (params.locale as string) || "en-US";
-  const locale: Locale = SUPPORTED_LOCALES.includes(raw as Locale) ? (raw as Locale) : "en-US";
+  const locale: Locale = SUPPORTED_LOCALES.includes(raw as Locale)
+    ? (raw as Locale)
+    : "en-US";
 
   function setLocale(next: Locale) {
     const parts = loc.pathname.split("/").filter(Boolean);

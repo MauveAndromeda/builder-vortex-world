@@ -20,17 +20,34 @@ export default function BookCard({ work }: { work: Work }) {
         </Link>
         <div className="p-4">
           <h3 className="font-semibold leading-snug">
-            <Link to={localized(`/work/${work.slug}`, locale)} className="hover:underline underline-offset-4">
+            <Link
+              to={localized(`/work/${work.slug}`, locale)}
+              className="hover:underline underline-offset-4"
+            >
               {work.title}
             </Link>
           </h3>
-          <div className="text-xs text-muted-foreground mt-0.5">{work.author}</div>
-          <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{work.excerpt}</p>
+          <div className="text-xs text-muted-foreground mt-0.5">
+            {work.author}
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+            {work.excerpt}
+          </p>
           <div className="mt-3 flex items-center justify-between text-sm">
             <span className="opacity-70">${work.price?.toFixed(2)}</span>
             <div className="flex gap-2">
-              <Link to={localized(`/work/${work.slug}`, locale)} className="rounded-full border px-3 py-1 transition group-hover:bg-muted">{t("readOnline", locale)}</Link>
-              <Link to={localized(`/checkout/work/${work.slug}`, locale)} className="rounded-full border px-3 py-1 transition group-hover:bg-muted">Buy</Link>
+              <Link
+                to={localized(`/work/${work.slug}`, locale)}
+                className="rounded-full border px-3 py-1 transition group-hover:bg-muted"
+              >
+                {t("readOnline", locale)}
+              </Link>
+              <Link
+                to={localized(`/checkout/work/${work.slug}`, locale)}
+                className="rounded-full border px-3 py-1 transition group-hover:bg-muted"
+              >
+                Buy
+              </Link>
             </div>
           </div>
         </div>

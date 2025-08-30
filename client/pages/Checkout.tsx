@@ -44,7 +44,10 @@ export default function Checkout() {
     if (mode === "chapter" && slug && order) {
       const c = getChaptersByWork(slug).find((x) => x.order === order);
       if (!c) return null;
-      return { label: `${slug} #${order}`, amount: Math.round((c.price || 1) * 100) };
+      return {
+        label: `${slug} #${order}`,
+        amount: Math.round((c.price || 1) * 100),
+      };
     }
     if (mode === "donation") return { label: "Donation", amount: 500 }; // $5 default
     return null;
@@ -59,8 +62,14 @@ export default function Checkout() {
         fetch("/api/stripe/create-intent", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: item.amount, currency: "usd", mode, slug, order }),
-        }).then((r)=>r.json()),
+          body: JSON.stringify({
+            amount: item.amount,
+            currency: "usd",
+            mode,
+            slug,
+            order,
+          }),
+        }).then((r) => r.json()),
       ]);
       setPk(key || "");
       setClientSecret(intentRes.clientSecret || null);
@@ -70,7 +79,8 @@ export default function Checkout() {
         const els = s.elements({ clientSecret: intentRes.clientSecret });
         const payment = els.create("payment");
         payment.mount("#payment-element");
-        setStripe(s); setElements(els);
+        setStripe(s);
+        setElements(els);
       }
     }
     setup();
@@ -82,43 +92,78 @@ export default function Checkout() {
     setStatus("Confirming payment…");
     const { error } = await stripe.confirmPayment({
       elements,
-      confirmParams: { return_url: window.location.origin + "/" + locale + "/account/purchases" },
+      confirmParams: {
+        return_url:
+          window.location.origin + "/" + locale + "/account/purchases",
+      },
       redirect: "if_required",
     });
-    if (error) setStatus(error.message || "Payment failed"); else {
+    if (error) setStatus(error.message || "Payment failed");
+    else {
       setStatus("Paid or redirected");
-      try{
+      try {
         const ach: string[] = [];
-        if (mode==='donation') ach.push('first_tip');
-        if (mode==='buy-all') ach.push('first_buy_all');
-        if (ach.length){ await fetch('/api/achievements', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ achievements: ach }) }); }
-        ach.forEach(a=> toast(`Achievement unlocked: ${a.replace('_',' ')}`));
-      }catch{}
+        if (mode === "donation") ach.push("first_tip");
+        if (mode === "buy-all") ach.push("first_buy_all");
+        if (ach.length) {
+          await fetch("/api/achievements", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ achievements: ach }),
+          });
+        }
+        ach.forEach((a) =>
+          toast(`Achievement unlocked: ${a.replace("_", " ")}`),
+        );
+      } catch {}
     }
   }
 
   return (
     <section className="py-16 max-w-xl">
-      <SEO title={`Checkout — ${I18N.t("brand", locale)}`} description="Secure checkout" />
+      <SEO
+        title={`Checkout — ${I18N.t("brand", locale)}`}
+        description="Secure checkout"
+      />
       <h1 className="text-3xl font-semibold">Checkout</h1>
       {!item ? (
         <p className="mt-4 text-muted-foreground">Invalid item.</p>
       ) : (
         <div className="mt-6 rounded-2xl border p-6">
           <div className="font-medium">{item.label}</div>
-          <div className="mt-1 text-sm text-muted-foreground">${(item.amount/100).toFixed(2)} USD</div>
+          <div className="mt-1 text-sm text-muted-foreground">
+            ${(item.amount / 100).toFixed(2)} USD
+          </div>
           <div className="mt-4 text-sm">{status}</div>
-          {!pk && <div className="mt-2 text-xs text-amber-600">Stripe publishable key not set. Running in demo mode.</div>}
+          {!pk && (
+            <div className="mt-2 text-xs text-amber-600">
+              Stripe publishable key not set. Running in demo mode.
+            </div>
+          )}
           {clientSecret ? (
             <form onSubmit={pay} className="mt-4 grid gap-4">
               <div className="rounded-md border p-3">
-                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={human} onChange={(e)=>setHuman(e.target.checked)} />I am human</label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={human}
+                    onChange={(e) => setHuman(e.target.checked)}
+                  />
+                  I am human
+                </label>
                 <div id="payment-element" className="mt-3"></div>
               </div>
-              <button disabled={!human} className="rounded-full bg-foreground text-background px-5 py-2 text-sm disabled:opacity-50">Pay</button>
+              <button
+                disabled={!human}
+                className="rounded-full bg-foreground text-background px-5 py-2 text-sm disabled:opacity-50"
+              >
+                Pay
+              </button>
             </form>
           ) : (
-            <div className="mt-6 text-sm text-muted-foreground">Creating payment intent…</div>
+            <div className="mt-6 text-sm text-muted-foreground">
+              Creating payment intent…
+            </div>
           )}
         </div>
       )}

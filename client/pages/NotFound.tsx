@@ -16,7 +16,10 @@ const NotFound = () => {
         <h1 className="text-6xl font-semibold">404</h1>
         <p className="mt-2 text-muted-foreground">{t("notFound", locale)}</p>
         <div className="mt-6">
-          <Link className="rounded-full bg-foreground text-background px-4 py-2 text-sm" to={localized("/", locale)}>
+          <Link
+            className="rounded-full bg-foreground text-background px-4 py-2 text-sm"
+            to={localized("/", locale)}
+          >
             {t("home", locale)}
           </Link>
         </div>

@@ -10,13 +10,21 @@ interface SEOProps {
   localeHref?: string; // explicit canonical path if needed
 }
 
-export function SEO({ title, description, ogImage, noindex = true, localeHref }: SEOProps) {
+export function SEO({
+  title,
+  description,
+  ogImage,
+  noindex = true,
+  localeHref,
+}: SEOProps) {
   const loc = useLocation();
   useEffect(() => {
     if (title) document.title = title;
 
     function setMeta(name: string, content: string) {
-      let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
+      let el = document.querySelector(
+        `meta[name="${name}"]`,
+      ) as HTMLMetaElement | null;
       if (!el) {
         el = document.createElement("meta");
         el.setAttribute("name", name);
@@ -26,7 +34,9 @@ export function SEO({ title, description, ogImage, noindex = true, localeHref }:
     }
 
     function setProp(property: string, content: string) {
-      let el = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null;
+      let el = document.querySelector(
+        `meta[property="${property}"]`,
+      ) as HTMLMetaElement | null;
       if (!el) {
         el = document.createElement("meta");
         el.setAttribute("property", property);
@@ -36,7 +46,9 @@ export function SEO({ title, description, ogImage, noindex = true, localeHref }:
     }
 
     const canonicalHref = CANONICAL_DOMAIN + (localeHref ?? loc.pathname);
-    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    let link = document.querySelector(
+      'link[rel="canonical"]',
+    ) as HTMLLinkElement | null;
     if (!link) {
       link = document.createElement("link");
       link.setAttribute("rel", "canonical");

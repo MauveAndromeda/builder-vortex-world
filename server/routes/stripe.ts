@@ -8,14 +8,21 @@ export const handlePublicKey: RequestHandler = (req, res) => {
 export const handleCreateIntent: RequestHandler = async (req, res) => {
   try {
     const { amount, currency = "usd", mode, slug, order } = req.body || {};
-    if (!amount || typeof amount !== "number") return res.status(400).json({ ok: false, error: "amount required" });
+    if (!amount || typeof amount !== "number")
+      return res.status(400).json({ ok: false, error: "amount required" });
     const sk = process.env.STRIPE_SECRET_KEY;
-    const metadata: Record<string, string> = { mode: String(mode || "unknown") };
+    const metadata: Record<string, string> = {
+      mode: String(mode || "unknown"),
+    };
     if (slug) metadata.slug = String(slug);
     if (order) metadata.order = String(order);
 
     if (!sk) {
-      return res.json({ ok: true, demo: true, clientSecret: "demo_client_secret" });
+      return res.json({
+        ok: true,
+        demo: true,
+        clientSecret: "demo_client_secret",
+      });
     }
 
     const stripe = new Stripe(sk, { apiVersion: "2025-08-27.basil" });
@@ -27,7 +34,9 @@ export const handleCreateIntent: RequestHandler = async (req, res) => {
     });
     return res.json({ ok: true, clientSecret: intent.client_secret });
   } catch (e: any) {
-    return res.status(500).json({ ok: false, error: e?.message || "server_error" });
+    return res
+      .status(500)
+      .json({ ok: false, error: e?.message || "server_error" });
   }
 };
 
