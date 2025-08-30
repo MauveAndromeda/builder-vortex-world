@@ -51,6 +51,13 @@ export function Search({ onSubmit }: { onSubmit?: (q: string) => void }) {
 
 export function Header() {
   const { locale } = useLocale();
+  const [user, setUser] = useState<any>(null);
+  useEffect(()=>{
+    try{ const u = localStorage.getItem("auth:user"); setUser(u? JSON.parse(u): null); }catch{}
+    const on = () => { try{ const u = localStorage.getItem("auth:user"); setUser(u? JSON.parse(u): null); }catch{} };
+    window.addEventListener("storage", on);
+    return () => window.removeEventListener("storage", on);
+  },[]);
   return (
     <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-background/70 bg-background/80 border-b border-border">
       <div className="container mx-auto flex items-center justify-between py-4">
@@ -66,6 +73,15 @@ export function Header() {
           </nav>
         </div>
         <div className="flex items-center gap-3">
+          {user ? (
+            <Link to={localized("/account/purchases", locale)} className="rounded-full border px-3 py-1.5 text-sm hover:bg-muted">User Center</Link>
+          ) : (
+            <div className="hidden md:flex items-center gap-2 text-sm">
+              <Link to={localized("/account/sign-in", locale)} className="opacity-80 hover:opacity-100">Sign in</Link>
+              <span className="opacity-40">/</span>
+              <Link to={localized("/account/register", locale)} className="opacity-80 hover:opacity-100">Register</Link>
+            </div>
+          )}
           <Search />
           <LocaleSwitcher />
         </div>

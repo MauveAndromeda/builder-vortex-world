@@ -14,7 +14,7 @@ export default function Splash() {
     const id = setTimeout(() => {
       try { sessionStorage.setItem("splashSeen", "1"); } catch {}
       nav("/", { replace: true });
-    }, 1200);
+    }, 600);
     return () => clearTimeout(id);
   }, [nav]);
 
@@ -32,7 +32,7 @@ export default function Splash() {
       <img alt="silhouette" src="https://cdn.builder.io/api/v1/image/assets%2F2ddbc13a7719400ea5b757207fa45062%2Fbb23ddf3d1ea47ce816d2902b98e3562?format=webp&width=800" className="absolute left-0 bottom-0 w-[52%] max-w-[640px] opacity-70 select-none pointer-events-none" />
       <div className="relative z-10 flex min-h-screen items-center justify-center text-center">
         <div className="text-white animate-in fade-in zoom-in duration-700">
-          <h1 className="text-2xl md:text-4xl font-semibold">恭喜你发现了伊城的小书屋</h1>
+          <h1 className="text-2xl md:text-4xl font-semibold">恭喜你发现了伊城的小书屋——你比99%的人更幸运</h1>
           <a onClick={skip} href="/" className="mt-6 inline-block rounded-full border border-white/50 px-4 py-2 text-sm opacity-80 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white/80">Skip</a>
         </div>
       </div>
