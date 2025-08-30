@@ -188,6 +188,12 @@ export default function Layout() {
     } catch {}
   }, [loc.pathname]);
 
+  useEffect(() => {
+    const onCtx = (e: MouseEvent) => { e.preventDefault(); };
+    document.addEventListener("contextmenu", onCtx);
+    return () => document.removeEventListener("contextmenu", onCtx);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
