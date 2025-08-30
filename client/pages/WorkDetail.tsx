@@ -104,7 +104,7 @@ export default function WorkDetail() {
       <div className="mt-8 grid gap-10 md:grid-cols-12">
         <article
           id="reader"
-          className="md:col-span-8 max-h-[70vh] overflow-auto rounded-2xl border p-6 bg-card relative no-copy"
+          className="md:col-span-8 max-h-[70vh] overflow-auto rounded-2xl border p-6 bg-[#f8f5e7] text-black relative no-copy"
           onCopy={(e) => e.preventDefault()}
           onContextMenu={(e) => e.preventDefault()}
           ref={readerRef}
@@ -123,19 +123,6 @@ export default function WorkDetail() {
               </label>
             </div>
           )}
-          <div className="absolute inset-0 -z-0">
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `url(${work.cover})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                filter: "blur(8px)",
-                opacity: 0.35,
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/60 to-background" />
-          </div>
           <div className="pointer-events-none absolute inset-0 flex items-end justify-end p-3 text-[10px] opacity-40 select-none">
             <span>
               {email} · {new Date().toLocaleString()}
@@ -144,12 +131,12 @@ export default function WorkDetail() {
           <div
             className="pointer-events-none absolute inset-0 z-0"
             style={{
-              backgroundImage: `repeating-linear-gradient(45deg, transparent 0, transparent 120px, rgba(255,255,255,0.08) 120px, rgba(255,255,255,0.08) 121px)`,
+              backgroundImage: `repeating-linear-gradient(45deg, transparent 0, transparent 120px, rgba(0,0,0,0.03) 120px, rgba(0,0,0,0.03) 121px)`,
               transform: `translateY(${wmOffset * 0.2}px)`,
-              mixBlendMode: "overlay",
+              mixBlendMode: "multiply",
             }}
           />
-          <div className="relative z-10 prose prose-neutral dark:prose-invert max-w-none">
+          <div className="relative z-10 prose prose-neutral max-w-none text-black">
             <p>{chapters[0]?.content || "A sample will appear here."}</p>
             <p>— {work.author}</p>
           </div>
