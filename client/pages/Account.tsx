@@ -1,5 +1,4 @@
 import SEO from "@/components/site/SEO";
-import SEO from "@/components/site/SEO";
 import { useLocale, t, localized } from "@/lib/i18n";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
