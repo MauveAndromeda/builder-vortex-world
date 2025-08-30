@@ -57,6 +57,57 @@ export default function Starfield({
     const layerMid = makeStars(Math.floor(total * 0.45), 0.25, 1.1);
     const layerFront = makeStars(Math.floor(total * 0.25), 0.5, 1.6);
 
+    // Celestial objects (galaxies, clusters, planets)
+    type Galaxy = { x: number; y: number; rx: number; ry: number; rot: number; tw: number };
+    type Cluster = { x: number; y: number; r: number; tw: number };
+    type Planet = { x: number; y: number; r: number; color: string; ring: boolean };
+
+    let galaxies: Galaxy[] = [];
+    let clusters: Cluster[] = [];
+    let planets: Planet[] = [];
+
+    function seedRandom(seed: number) {
+      let t = seed >>> 0;
+      return () => {
+        t += 0x6d2b79f5;
+        let r = Math.imul(t ^ (t >>> 15), 1 | t);
+        r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+        return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function regenCelestial() {
+      const epoch = Math.floor(Date.now() / (1000 * 60 * 30));
+      const rnd = seedRandom(epoch + (mode === "night" ? 100 : mode === "dusk" ? 60 : 20));
+      const gCount = mode === "night" ? 5 : mode === "dusk" || mode === "dawn" ? 3 : 1;
+      const cCount = mode === "night" ? 14 : mode === "dusk" || mode === "dawn" ? 9 : 4;
+      const pCount = mode === "night" ? 2 : mode === "dusk" ? 1 : 0;
+      galaxies = Array.from({ length: gCount }, () => ({
+        x: rnd() * w,
+        y: rnd() * h * 0.6,
+        rx: 28 + rnd() * 36,
+        ry: 12 + rnd() * 22,
+        rot: rnd() * Math.PI,
+        tw: rnd() * Math.PI * 2,
+      }));
+      clusters = Array.from({ length: cCount }, () => ({
+        x: rnd() * w,
+        y: rnd() * h,
+        r: 18 + rnd() * 26,
+        tw: rnd() * Math.PI * 2,
+      }));
+      planets = Array.from({ length: pCount }, () => ({
+        x: w * (0.2 + rnd() * 0.6),
+        y: h * (0.15 + rnd() * 0.35),
+        r: 8 + rnd() * 10,
+        color: rnd() > 0.5 ? "#9ad1ff" : "#ffd48a",
+        ring: rnd() > 0.6,
+      }));
+    }
+
+    regenCelestial();
+    const regenId = setInterval(regenCelestial, 30 * 60 * 1000);
+
     let scrollY = window.scrollY;
     const onScroll = () => {
       scrollY = window.scrollY;
