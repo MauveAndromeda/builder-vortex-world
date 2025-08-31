@@ -299,6 +299,10 @@ function AdminContent({ token }: { token: string }) {
         </div>
       </form>
       <div className="rounded-2xl border p-4">
+        <div className="font-medium">Upload Images</div>
+        <AdminImageUpload token={token} onSetCover={(url) => setForm((f)=>({ ...f, cover: url }))} onInsertContent={(url) => setForm((f)=>({ ...f, content: `${f.content}\n\n![](${url})\n\n` }))} />
+      </div>
+      <div className="rounded-2xl border p-4">
         <div className="font-medium">Manage Works</div>
         <div className="mt-3 space-y-3">
           {list.works.map((w) => (
