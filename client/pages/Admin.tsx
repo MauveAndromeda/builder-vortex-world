@@ -300,7 +300,16 @@ function AdminContent({ token }: { token: string }) {
       </form>
       <div className="rounded-2xl border p-4">
         <div className="font-medium">Upload Images</div>
-        <AdminImageUpload token={token} onSetCover={(url) => setForm((f)=>({ ...f, cover: url }))} onInsertContent={(url) => setForm((f)=>({ ...f, content: `${f.content}\n\n![](${url})\n\n` }))} />
+        <AdminImageUpload
+          token={token}
+          onSetCover={(url) => setForm((f) => ({ ...f, cover: url }))}
+          onInsertContent={(url) =>
+            setForm((f) => ({
+              ...f,
+              content: `${f.content}\n\n![](${url})\n\n`,
+            }))
+          }
+        />
       </div>
       <div className="rounded-2xl border p-4">
         <div className="font-medium">Manage Works</div>
@@ -347,7 +356,15 @@ function AdminContent({ token }: { token: string }) {
   );
 }
 
-function AdminImageUpload({ token, onSetCover, onInsertContent }: { token: string; onSetCover: (url: string) => void; onInsertContent: (url: string) => void }) {
+function AdminImageUpload({
+  token,
+  onSetCover,
+  onInsertContent,
+}: {
+  token: string;
+  onSetCover: (url: string) => void;
+  onInsertContent: (url: string) => void;
+}) {
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   async function upload(kind: "cover" | "content") {
@@ -357,7 +374,10 @@ function AdminImageUpload({ token, onSetCover, onInsertContent }: { token: strin
       const dataUri = await toDataUri(file);
       const r = await fetch("/api/admin/upload", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ filename: file.name, dataUri }),
       });
       const j = await r.json();
@@ -371,10 +391,29 @@ function AdminImageUpload({ token, onSetCover, onInsertContent }: { token: strin
   }
   return (
     <div className="mt-3 rounded border p-3 space-y-2">
-      <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="w-full text-sm" />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setFile(e.target.files?.[0] || null)}
+        className="w-full text-sm"
+      />
       <div className="flex gap-2">
-        <button type="button" disabled={!file || busy} onClick={() => upload("cover")} className="rounded border px-3 py-1 text-sm disabled:opacity-50">设为封面</button>
-        <button type="button" disabled={!file || busy} onClick={() => upload("content")} className="rounded border px-3 py-1 text-sm disabled:opacity-50">插入到正文</button>
+        <button
+          type="button"
+          disabled={!file || busy}
+          onClick={() => upload("cover")}
+          className="rounded border px-3 py-1 text-sm disabled:opacity-50"
+        >
+          设为封面
+        </button>
+        <button
+          type="button"
+          disabled={!file || busy}
+          onClick={() => upload("content")}
+          className="rounded border px-3 py-1 text-sm disabled:opacity-50"
+        >
+          插入到正文
+        </button>
       </div>
     </div>
   );

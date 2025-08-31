@@ -80,7 +80,7 @@ export default function Home() {
   const merged = useMemo(() => {
     const map = new Map(allWorks.map((w) => [w.slug, { ...w }]));
     for (const w of adminData.works || []) {
-      const base = map.get(w.slug) || {} as any;
+      const base = map.get(w.slug) || ({} as any);
       map.set(w.slug, { ...base, ...w });
     }
     return Array.from(map.values()).filter((w) => w.published);
