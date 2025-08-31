@@ -25,7 +25,7 @@ export const handleCreateIntent: RequestHandler = async (req, res) => {
       });
     }
 
-    const stripe = new Stripe(sk, { apiVersion: "2025-08-27.basil" });
+    const stripe = new Stripe(sk, { apiVersion: "2024-06-20" });
     const intent = await stripe.paymentIntents.create({
       amount,
       currency,
@@ -45,7 +45,7 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
     const whSecret = process.env.STRIPE_WEBHOOK_SECRET;
     const sk = process.env.STRIPE_SECRET_KEY || "";
     if (!sk) return res.status(200).json({ received: true, demo: true });
-    const stripe = new Stripe(sk, { apiVersion: "2025-08-27.basil" });
+    const stripe = new Stripe(sk, { apiVersion: "2024-06-20" });
 
     if (whSecret) {
       const sig = req.headers["stripe-signature"] as string | undefined;
