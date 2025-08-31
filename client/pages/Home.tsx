@@ -78,11 +78,12 @@ export default function Home() {
   }, []);
 
   const merged = useMemo(() => {
-    const bySlug = new Map(allWorks.map((w) => [w.slug, w]));
-    const extras = (adminData.works || []).filter(
-      (w: any) => !bySlug.has(w.slug),
-    );
-    return [...allWorks, ...extras].filter((w) => w.published);
+    const map = new Map(allWorks.map((w) => [w.slug, { ...w }]));
+    for (const w of adminData.works || []) {
+      const base = map.get(w.slug) || {} as any;
+      map.set(w.slug, { ...base, ...w });
+    }
+    return Array.from(map.values()).filter((w) => w.published);
   }, [adminData.works]);
 
   const worksSorted = useMemo(
