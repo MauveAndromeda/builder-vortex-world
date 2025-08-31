@@ -347,6 +347,48 @@ function AdminContent({ token }: { token: string }) {
   );
 }
 
+function AdminImageUpload({ token, onSetCover, onInsertContent }: { token: string; onSetCover: (url: string) => void; onInsertContent: (url: string) => void }) {
+  const [file, setFile] = useState<File | null>(null);
+  const [busy, setBusy] = useState(false);
+  async function upload(kind: "cover" | "content") {
+    if (!file) return;
+    setBusy(true);
+    try {
+      const dataUri = await toDataUri(file);
+      const r = await fetch("/api/admin/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ filename: file.name, dataUri }),
+      });
+      const j = await r.json();
+      if (j.url) {
+        if (kind === "cover") onSetCover(j.url);
+        else onInsertContent(j.url);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="mt-3 rounded border p-3 space-y-2">
+      <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="w-full text-sm" />
+      <div className="flex gap-2">
+        <button type="button" disabled={!file || busy} onClick={() => upload("cover")} className="rounded border px-3 py-1 text-sm disabled:opacity-50">设为封面</button>
+        <button type="button" disabled={!file || busy} onClick={() => upload("content")} className="rounded border px-3 py-1 text-sm disabled:opacity-50">插入到正文</button>
+      </div>
+    </div>
+  );
+}
+
+function toDataUri(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 function AdminStats({ token }: { token: string }) {
   const [stats, setStats] = useState<any>(null);
   useEffect(() => {
