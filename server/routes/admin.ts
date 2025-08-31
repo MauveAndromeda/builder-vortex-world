@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 
 // In-memory store (ephemeral)
 const store = {
@@ -7,6 +9,7 @@ const store = {
   adminUser: process.env.ADMIN_USER || "admin",
   adminPass: process.env.ADMIN_PASS || "admin123",
   works: [] as any[], // extra works created via admin
+  chapters: new Map<string, any[]>(),
   featuredSlugs: new Set<string>(),
   stats: {
     startedAt: Date.now(),
@@ -61,7 +64,7 @@ export function attachAdmin(app: any) {
 
   // Create / upload work
   app.post("/api/admin/works", adminMiddleware, (req: Request, res: Response) => {
-    const { title, slug, cover, excerpt, author, date, tags, price, published, content, featured, homepage } = req.body || {};
+    const { title, slug, cover, excerpt, author, date, tags, price, published, content, featured } = req.body || {};
     if (!title || !slug) return res.status(400).json({ error: "missing_title_or_slug" });
     const exists = store.works.some((w) => w.slug === slug);
     if (exists) return res.status(409).json({ error: "slug_exists" });
@@ -74,6 +77,7 @@ export function attachAdmin(app: any) {
     let chapters: any[] = [];
     if (content && typeof content === "string") {
       chapters = autoSplit(content, slug);
+      store.chapters.set(slug, chapters);
     }
     res.json({ ok: true, work, chapters });
   });
@@ -94,11 +98,16 @@ export function attachAdmin(app: any) {
     const { slug } = req.params;
     const w = store.works.find((x) => x.slug === slug);
     if (!w) return res.status(404).json({ error: "not_found" });
-    const { price, featured } = req.body || {};
+    const { price, featured, cover, content } = req.body || {};
     if (price != null) w.price = Number(price);
+    if (cover) w.cover = String(cover);
     if (featured === true) store.featuredSlugs.add(slug);
     if (featured === false) store.featuredSlugs.delete(slug);
-    res.json({ ok: true, work: w });
+    if (typeof content === "string") {
+      const chapters = autoSplit(content, slug);
+      store.chapters.set(slug, chapters);
+    }
+    res.json({ ok: true, work: w, chapters: store.chapters.get(slug) || [] });
   });
 
   // Auto split chapters endpoint
@@ -107,6 +116,37 @@ export function attachAdmin(app: any) {
     if (!content) return res.status(400).json({ error: "missing_content" });
     const chapters = autoSplit(String(content), String(workSlug || "work"));
     res.json({ ok: true, chapters });
+  });
+
+  // Get chapters for a work (admin-created)
+  app.get("/api/admin/chapters/:slug", (req: Request, res: Response) => {
+    const slug = String(req.params.slug);
+    const ch = store.chapters.get(slug) || [];
+    res.json({ ok: true, chapters: ch });
+  });
+
+  // Base64 image upload (saves under public/uploads)
+  app.post("/api/admin/upload", adminMiddleware, (req: Request, res: Response) => {
+    try {
+      const { dataUri, filename } = req.body || {};
+      if (!dataUri || typeof dataUri !== "string") return res.status(400).json({ error: "missing_dataUri" });
+      const m = dataUri.match(/^data:(.+?);base64,(.+)$/);
+      if (!m) return res.status(400).json({ error: "invalid_dataUri" });
+      const mime = m[1];
+      const b64 = m[2];
+      const buf = Buffer.from(b64, "base64");
+      const extFromMime = mime.split("/")[1] || "bin";
+      const ext = (filename?.split(".").pop() || extFromMime).toLowerCase();
+      const dir = path.join(process.cwd(), "public", "uploads");
+      fs.mkdirSync(dir, { recursive: true });
+      const key = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const filePath = path.join(dir, key);
+      fs.writeFileSync(filePath, buf);
+      const url = `/uploads/${key}`;
+      res.json({ ok: true, url, mime, size: buf.length });
+    } catch (e: any) {
+      res.status(500).json({ error: e?.message || "upload_failed" });
+    }
   });
 
   // AI optimize endpoint (stub)
