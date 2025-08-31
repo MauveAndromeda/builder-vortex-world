@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import path from "node:path";
 import { handleDemo } from "./routes/demo";
 import { handleSubscribe } from "./routes/subscribe";
 import { handleContact } from "./routes/contact";
@@ -21,6 +22,12 @@ export function createServer() {
     res.setHeader("X-Robots-Tag", "noindex, noarchive");
     next();
   });
+  // Serve uploaded files when running a persistent Node server
+  app.use(
+    "/uploads",
+    express.static(path.join(process.cwd(), "public", "uploads")),
+  );
+
   // Stripe webhook must receive raw body
   app.post(
     "/api/stripe/webhook",
