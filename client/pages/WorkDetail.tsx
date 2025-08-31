@@ -14,7 +14,18 @@ export default function WorkDetail() {
         <div>Not found</div>
       </section>
     );
-  const chapters = getChaptersByWork(work.slug);
+  const [chaptersState, setChaptersState] = useState(() => getChaptersByWork(work.slug));
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await fetch(`/api/admin/chapters/${encodeURIComponent(work.slug)}`);
+        if (r.ok) {
+          const j = await r.json();
+          if (Array.isArray(j.chapters) && j.chapters.length) setChaptersState(j.chapters);
+        }
+      } catch {}
+    })();
+  }, [work.slug]);
 
   const [fontSize, setFontSize] = useState<number>(() =>
     Number(localStorage.getItem("reader:font") || "18"),
