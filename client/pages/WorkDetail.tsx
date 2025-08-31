@@ -46,7 +46,7 @@ export default function WorkDetail() {
   const [readSet, setReadSet] = useState<Set<number>>(
     () =>
       new Set<number>(
-        chapters
+        chaptersState
           .filter(
             (c) => localStorage.getItem(`read:${work.slug}:${c.order}`) === "1",
           )
@@ -78,7 +78,7 @@ export default function WorkDetail() {
           localStorage.setItem(rk, "1");
           setReadSet(
             (prev) =>
-              new Set<number>([...Array.from(prev), chapters[0]!.order]),
+              new Set<number>([...Array.from(prev), chaptersState[0]!.order]),
           );
         }
       }
@@ -156,7 +156,7 @@ export default function WorkDetail() {
           <div className="rounded-2xl border p-5">
             <div className="font-medium mb-2">{t("chapters", locale)}</div>
             <ol className="space-y-2 text-sm">
-              {chapters.map((c) => (
+              {chaptersState.map((c) => (
                 <li key={c.order} className="flex items-center justify-between">
                   <span className="truncate flex items-center gap-2">
                     {readSet.has(c.order) && (
