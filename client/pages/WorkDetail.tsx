@@ -72,8 +72,8 @@ export default function WorkDetail() {
       const p = Math.min(1, el.scrollTop / max);
       setProgress(p);
       setWmOffset((el.scrollTop || 0) % 120);
-      if (p > 0.8 && chapters[0]) {
-        const rk = `read:${work.slug}:${chapters[0].order}`;
+      if (p > 0.8 && chaptersState[0]) {
+        const rk = `read:${work.slug}:${chaptersState[0].order}`;
         if (localStorage.getItem(rk) !== "1") {
           localStorage.setItem(rk, "1");
           setReadSet(
@@ -148,7 +148,7 @@ export default function WorkDetail() {
             }}
           />
           <div className="relative z-10 prose prose-neutral max-w-none text-black">
-            <p>{chapters[0]?.content || "A sample will appear here."}</p>
+            <p>{chaptersState[0]?.content || "A sample will appear here."}</p>
             <p>— {work.author}</p>
           </div>
         </article>
