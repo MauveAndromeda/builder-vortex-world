@@ -5,7 +5,6 @@ import path from "node:path";
 
 // In-memory store (ephemeral)
 const store = {
-  token: "" as string,
   adminUser: process.env.ADMIN_USER || "admin",
   adminPass: process.env.ADMIN_PASS || "admin123",
   works: [] as any[], // extra works created via admin
@@ -20,6 +19,38 @@ const store = {
   },
 };
 
+const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || process.env.JWT_SECRET || "dev_admin_secret_change_me";
+
+function base64url(input: Buffer | string) {
+  const b = Buffer.isBuffer(input) ? input : Buffer.from(input);
+  return b.toString("base64").replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+}
+
+function signToken(payload: Record<string, any>): string {
+  const header = { alg: "HS256", typ: "JWT" };
+  const encHeader = base64url(JSON.stringify(header));
+  const encPayload = base64url(JSON.stringify(payload));
+  const data = `${encHeader}.${encPayload}`;
+  const sig = crypto.createHmac("sha256", ADMIN_JWT_SECRET).update(data).digest();
+  return `${data}.${base64url(sig)}`;
+}
+
+function verifyToken(token: string): any | null {
+  const parts = token.split(".");
+  if (parts.length !== 3) return null;
+  const [encHeader, encPayload, encSig] = parts;
+  const data = `${encHeader}.${encPayload}`;
+  const expected = base64url(crypto.createHmac("sha256", ADMIN_JWT_SECRET).update(data).digest());
+  if (expected !== encSig) return null;
+  try {
+    const payload = JSON.parse(Buffer.from(encPayload.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8"));
+    if (payload.exp && Date.now() >= Number(payload.exp)) return null;
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
 export function adminMiddleware(
   req: Request,
   res: Response,
@@ -28,10 +59,12 @@ export function adminMiddleware(
   const hdr = req.headers["authorization"] || "";
   const token = Array.isArray(hdr) ? hdr[0] : hdr;
   const t = token.replace(/^Bearer\s+/i, "");
-  if (!t || t !== store.token) {
+  const payload = t ? verifyToken(t) : null;
+  if (!payload || payload.role !== "ADMIN") {
     res.status(401).json({ error: "unauthorized" });
     return;
   }
+  (req as any).admin = payload;
   next();
 }
 
@@ -44,8 +77,14 @@ export function attachAdmin(app: any) {
   app.post("/api/admin/login", (req: Request, res: Response) => {
     const { username, password } = req.body || {};
     if (username === store.adminUser && password === store.adminPass) {
-      store.token = crypto.randomBytes(16).toString("hex");
-      res.json({ token: store.token, user: { name: username, role: "ADMIN" } });
+      const payload = {
+        sub: String(username),
+        role: "ADMIN",
+        iat: Date.now(),
+        exp: Date.now() + 1000 * 60 * 60 * 12, // 12h
+      };
+      const token = signToken(payload);
+      res.json({ token, user: { name: username, role: "ADMIN" } });
     } else {
       res.status(401).json({ error: "invalid_credentials" });
     }
