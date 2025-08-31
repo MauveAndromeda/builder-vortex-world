@@ -106,7 +106,7 @@ function AdminLogin({ onToken }: { onToken: (t: string) => void }) {
           value={username}
           onChange={(e) => setUser(e.target.value)}
           placeholder="Username"
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border px-3 py-2 text-black"
         />
         <input
           type="password"
