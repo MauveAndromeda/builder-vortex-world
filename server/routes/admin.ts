@@ -19,11 +19,18 @@ const store = {
   },
 };
 
-const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || process.env.JWT_SECRET || "dev_admin_secret_change_me";
+const ADMIN_JWT_SECRET =
+  process.env.ADMIN_JWT_SECRET ||
+  process.env.JWT_SECRET ||
+  "dev_admin_secret_change_me";
 
 function base64url(input: Buffer | string) {
   const b = Buffer.isBuffer(input) ? input : Buffer.from(input);
-  return b.toString("base64").replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+  return b
+    .toString("base64")
+    .replace(/=/g, "")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_");
 }
 
 function signToken(payload: Record<string, any>): string {
@@ -31,7 +38,10 @@ function signToken(payload: Record<string, any>): string {
   const encHeader = base64url(JSON.stringify(header));
   const encPayload = base64url(JSON.stringify(payload));
   const data = `${encHeader}.${encPayload}`;
-  const sig = crypto.createHmac("sha256", ADMIN_JWT_SECRET).update(data).digest();
+  const sig = crypto
+    .createHmac("sha256", ADMIN_JWT_SECRET)
+    .update(data)
+    .digest();
   return `${data}.${base64url(sig)}`;
 }
 
@@ -40,10 +50,17 @@ function verifyToken(token: string): any | null {
   if (parts.length !== 3) return null;
   const [encHeader, encPayload, encSig] = parts;
   const data = `${encHeader}.${encPayload}`;
-  const expected = base64url(crypto.createHmac("sha256", ADMIN_JWT_SECRET).update(data).digest());
+  const expected = base64url(
+    crypto.createHmac("sha256", ADMIN_JWT_SECRET).update(data).digest(),
+  );
   if (expected !== encSig) return null;
   try {
-    const payload = JSON.parse(Buffer.from(encPayload.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8"));
+    const payload = JSON.parse(
+      Buffer.from(
+        encPayload.replace(/-/g, "+").replace(/_/g, "/"),
+        "base64",
+      ).toString("utf8"),
+    );
     if (payload.exp && Date.now() >= Number(payload.exp)) return null;
     return payload;
   } catch {
