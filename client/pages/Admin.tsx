@@ -113,7 +113,7 @@ function AdminLogin({ onToken }: { onToken: (t: string) => void }) {
           value={password}
           onChange={(e) => setPass(e.target.value)}
           placeholder="Password"
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border px-3 py-2 text-black"
         />
         {error && <div className="text-sm text-red-600">{error}</div>}
         <button className="rounded bg-foreground text-background px-4 py-2">
